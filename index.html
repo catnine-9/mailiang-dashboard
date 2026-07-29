@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>买量数据可视化大屏</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{margin:0;padding:0;background:#030014;color:#fff;font-family:'Inter','PingFang SC','Microsoft YaHei',sans-serif;min-width:1920px;min-height:1080px;user-select:none}
+body{overflow-x:hidden;overflow-y:auto}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);}::-webkit-scrollbar-thumb{background:rgba(46,167,255,0.4);border-radius:2px;}
+.header{display:flex;align-items:center;justify-content:center;height:90px;gap:0;position:relative}
+.header-line{width:600px;height:2px}
+.header-line.l{background:linear-gradient(90deg,transparent,#2EA7FF)}
+.header-line.r{background:linear-gradient(90deg,#2EA7FF,transparent)}
+.header-title{font-size:38px;font-weight:700;letter-spacing:4px;text-shadow:0 0 12px rgba(46,167,255,0.8),0 0 24px rgba(46,167,255,0.5);padding:0 32px}
+.header-badge{position:absolute;right:20px;top:50%;transform:translateY(-50%);display:flex;gap:10px;align-items:center}
+.badge-item{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:16px;background:rgba(10,24,56,0.8);border:1px solid rgba(46,167,255,0.4);font-size:12px}
+.badge-item .dot{width:6px;height:6px;border-radius:50%;background:#13DDC4;box-shadow:0 0 6px #13DDC4}
+.badge-item .time{font-family:'JetBrains Mono',monospace;color:#fff}
+.main{display:flex;padding:0 20px;gap:20px;height:690px}
+.col{display:flex;flex-direction:column;gap:14px}
+.col-left{width:380px}
+.col-center{width:1080px}
+.col-right{width:380px}
+.bottom{padding:0 20px;height:280px}
+.panel{background:rgba(10,24,56,0.6);border:1px solid rgba(46,167,255,0.25);border-radius:8px;padding:16px;position:relative}
+.panel::before,.panel::after{content:'';position:absolute;width:14px;height:14px;border-color:rgba(46,167,255,0.8);border-style:solid}
+.panel::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.panel::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+.panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.panel-title{font-size:16px;font-weight:700;letter-spacing:1px}
+.panel-badge{padding:3px 8px;border-radius:4px;font-size:11px;background:rgba(46,167,255,0.15);color:#2EA7FF;font-family:'JetBrains Mono',monospace}
+.gauge-card{background:rgba(10,24,56,0.6);border:1px solid rgba(46,167,255,0.25);border-radius:8px;padding:14px;position:relative;height:430px}
+.gauge-card::before,.gauge-card::after{content:'';position:absolute;width:14px;height:14px;border-color:rgba(46,167,255,0.8);border-style:solid}
+.gauge-card::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.gauge-card::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+.gauge-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.gauge-title{font-size:22px;font-weight:700;letter-spacing:2px}
+.live-badge{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:13px;background:rgba(19,221,196,0.15);border:1px solid rgba(19,221,196,0.5);font-size:12px;color:#13DDC4}
+.live-badge .dot{width:6px;height:6px;border-radius:50%;background:#13DDC4;box-shadow:0 0 6px #13DDC4}
+.gauge-body{display:flex;height:370px;align-items:center;position:relative}
+.gauge-side{display:flex;flex-direction:column;gap:16px;width:200px}
+.gauge-side .mini-card{height:105px;border-radius:6px;padding:12px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+.gauge-side .mini-label{font-size:12px;color:rgba(255,255,255,0.6)}
+.gauge-side .mini-val{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.gauge-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+#speedometer-svg{width:600px;height:340px}
+.gauge-value-row{display:flex;align-items:center;gap:16px;margin-top:10px;background:rgba(10,24,56,0.7);border:1px solid rgba(19,221,196,0.4);border-radius:18px;padding:8px 20px}
+.gauge-label{font-size:12px;color:#2EA7FF;letter-spacing:2px}
+.gauge-num{font-size:18px;font-weight:700;color:#fff;text-shadow:0 0 8px rgba(19,221,196,0.7)}
+.gauge-change{font-size:12px;color:#13DDC4}
+.roi-row{display:flex;gap:14px;margin-top:14px}
+.roi-block{flex:1;background:rgba(10,24,56,0.6);border-radius:8px;padding:14px;position:relative}
+.roi-block.m{border:1px solid rgba(46,167,255,0.25)}
+.roi-block.w{border:1px solid rgba(19,221,196,0.25)}
+.roi-block::before,.roi-block::after{content:'';position:absolute;width:12px;height:12px;border-color:rgba(46,167,255,0.6);border-style:solid}
+.roi-block::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.roi-block.w::before,.roi-block.w::after{border-color:rgba(19,221,196,0.6)}
+.roi-block::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+.roi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.roi-title{font-size:18px;font-weight:700;letter-spacing:1px}
+.roi-period{padding:3px 8px;border-radius:4px;font-size:11px;font-family:'JetBrains Mono',monospace}
+.roi-main{display:flex;justify-content:space-between;align-items:center}
+.roi-val{font-size:48px;font-weight:700;line-height:1}
+.roi-delta{font-size:13px;margin-top:4px}
+.roi-foot{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.65);margin-top:6px}
+.tbody{overflow-y:auto}
+.tr{display:flex;align-items:center;height:38px}
+.td{font-size:13px;color:rgba(255,255,255,0.85);white-space:nowrap}
+.td-chan{width:24px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-right:6px}
+.av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-right:6px}
+.td-mon{font-family:'JetBrains Mono',monospace;text-align:right}
+.table-header{display:flex;border-bottom:1px solid rgba(46,167,255,0.15);padding-bottom:4px;margin-bottom:4px}
+.th{font-size:11px;color:rgba(255,255,255,0.55);font-weight:500}
+.pie-body{display:flex;align-items:center;gap:12px;height:calc(100% - 40px)}
+.pie-chart{width:170px;height:170px;flex-shrink:0}
+.pie-legend{flex:1;display:flex;flex-direction:column;gap:4px}
+.leg-item{display:flex;align-items:center;gap:8px;height:30px}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.leg-text{font-size:11px;color:#fff;white-space:nowrap;flex:1}
+.leg-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
+.trend-panel{background:rgba(10,24,56,0.6);border:1px solid rgba(46,167,255,0.25);border-radius:8px;padding:12px;height:100%;position:relative}
+.trend-panel::before,.trend-panel::after{content:'';position:absolute;width:14px;height:14px;border-color:rgba(46,167,255,0.8);border-style:solid}
+.trend-panel::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.trend-panel::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+.trend-header{display:flex;justify-content:space-between;align-items:center;height:38px;margin-bottom:6px}
+.trend-title{display:flex;align-items:center;gap:12px}
+.trend-title-text{font-size:16px;font-weight:700;letter-spacing:1px}
+.trend-badge{padding:3px 8px;border-radius:4px;font-size:11px;background:rgba(19,221,196,0.15);color:#13DDC4}
+.trend-controls{display:flex;align-items:center;gap:8px}
+.date-btn{padding:4px 10px;border-radius:4px;font-size:12px;cursor:pointer;background:rgba(10,24,56,0.6);border:1px solid rgba(46,167,255,0.3);color:rgba(255,255,255,0.7);transition:all 0.2s}
+.date-btn:hover{border-color:rgba(46,167,255,0.6)}
+.date-btn.active{background:rgba(46,167,255,0.15);border-color:rgba(46,167,255,0.5);color:#2EA7FF}
+.date-custom{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:4px;font-size:11px;background:rgba(46,167,255,0.15);border:1px solid rgba(46,167,255,0.5);color:#2EA7FF;font-family:'JetBrains Mono',monospace;cursor:pointer}
+.metric-tabs{display:flex;gap:2px;padding:2px;background:rgba(10,24,56,0.6);border-radius:6px}
+.metric-tab{padding:6px 12px;border-radius:4px;font-size:12px;cursor:pointer;color:rgba(255,255,255,0.6);transition:all 0.2s}
+.metric-tab.active{background:#2EA7FF;color:#fff;font-weight:700}
+.metric-tab:hover{color:rgba(255,255,255,0.9)}
+#trend-chart{height:180px}
+.trend-xaxis{display:flex;justify-content:space-between;padding:0 5px;margin-top:4px}
+.trend-xaxis span{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.5)}
+.c-cyan{color:#13DDC4}
+.c-blue{color:#2EA7FF}
+.c-purple{color:#9381FF}
+.c-orange{color:#FFB454}
+.c-red{color:#FF4D6D}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-line l"></div>
+  <div class="header-title">买量数据可视化大屏</div>
+  <div class="header-line r"></div>
+  <div class="header-badge">
+    <div class="badge-item"><span class="dot"></span><span class="time" id="clockDisplay">07.29 16:13</span></div>
+    <div class="badge-item" style="border-color:rgba(19,221,196,0.4)"><span style="font-family:'JetBrains Mono',monospace;color:#2EA7FF">BI 实时 · 今日 07.29</span></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="col col-left">
+    <div class="panel" style="flex:1">
+      <div class="panel-header">
+        <div class="panel-title">渠道数据 <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,0.5)">· 当日</span></div>
+        <div class="panel-badge">07.29</div>
+      </div>
+      <div class="table-header">
+        <span class="th" style="width:30px"></span>
+        <span class="th" style="width:90px">渠道</span>
+        <span class="th" style="width:65px;text-align:right">消耗(万)</span>
+        <span class="th" style="width:55px;text-align:right">量级</span>
+        <span class="th" style="width:55px;text-align:right">单价</span>
+        <span class="th" style="width:55px;text-align:right">首日R</span>
+      </div>
+      <div class="tbody"><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.25);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">1</div><span class="td" style="width:90px">头条</span><span class="td td-mon" style="width:65px">15.76</span><span class="td td-mon" style="width:55px">2,980</span><span class="td td-mon" style="width:55px">52.9</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FFB454">4.8%</span></div>
+<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">2</div><span class="td" style="width:90px">UP主-磁力聚星</span><span class="td td-mon" style="width:65px">1.32</span><span class="td td-mon" style="width:55px">707</span><span class="td td-mon" style="width:55px">18.6</span><span class="td td-mon" style="width:55px;font-weight:700;color:#13DDC4">8.4%</span></div>
+<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">3</div><span class="td" style="width:90px">快手</span><span class="td td-mon" style="width:65px">1.15</span><span class="td td-mon" style="width:55px">426</span><span class="td td-mon" style="width:55px">26.9</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FFB454">4.6%</span></div>
+<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">4</div><span class="td" style="width:90px">sem百度</span><span class="td td-mon" style="width:65px">0.75</span><span class="td td-mon" style="width:55px">195</span><span class="td td-mon" style="width:55px">38.4</span><span class="td td-mon" style="width:55px;font-weight:700;color:#13DDC4">7.6%</span></div>
+<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">5</div><span class="td" style="width:90px">百度信息流</span><span class="td td-mon" style="width:65px">0.20</span><span class="td td-mon" style="width:55px">132</span><span class="td td-mon" style="width:55px">15.4</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">0.0%</span></div>
+<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">6</div><span class="td" style="width:90px">广点通</span><span class="td td-mon" style="width:65px">0.12</span><span class="td td-mon" style="width:55px">23</span><span class="td td-mon" style="width:55px">50.5</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">0.0%</span></div></div>
+    </div>
+    <div class="panel" style="flex:1;border-color:rgba(19,221,196,0.25)">
+      <div class="panel-header">
+        <div class="panel-title">投手数据 <span style="font-size:12px;font-weight:400;color:rgba(255,255,255,0.5)">· 当日 TOP</span></div>
+        <div class="panel-badge" style="background:rgba(19,221,196,0.15);color:#13DDC4">07.29</div>
+      </div>
+      <div class="table-header" style="border-color:rgba(19,221,196,0.15)">
+        <span class="th" style="width:30px"></span>
+        <span class="th" style="width:90px">投手</span>
+        <span class="th" style="width:65px;text-align:right">消耗(万)</span>
+        <span class="th" style="width:55px;text-align:right">量级</span>
+        <span class="th" style="width:55px;text-align:right">单价</span>
+        <span class="th" style="width:55px;text-align:right">首日R</span>
+      </div>
+      <div class="tbody"><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">翁</div><span class="td" style="width:90px">翁顺怡</span><span class="td td-mon" style="width:65px">2.87</span><span class="td td-mon" style="width:55px">623</span><span class="td td-mon" style="width:55px">46.0</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FFB454">4.4%</span></div>
+<div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">肖</div><span class="td" style="width:90px">肖方超[33018]</span><span class="td td-mon" style="width:65px">2.24</span><span class="td td-mon" style="width:55px">570</span><span class="td td-mon" style="width:55px">39.3</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">2.8%</span></div>
+<div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">周</div><span class="td" style="width:90px">周晓彬</span><span class="td td-mon" style="width:65px">2.12</span><span class="td td-mon" style="width:55px">396</span><span class="td td-mon" style="width:55px">53.5</span><span class="td td-mon" style="width:55px;font-weight:700;color:#13DDC4">5.3%</span></div>
+<div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">张</div><span class="td" style="width:90px">张崇晟</span><span class="td td-mon" style="width:65px">2.06</span><span class="td td-mon" style="width:55px">327</span><span class="td td-mon" style="width:55px">63.0</span><span class="td td-mon" style="width:55px;font-weight:700;color:#13DDC4">5.2%</span></div>
+<div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">何</div><span class="td" style="width:90px">何雅婷</span><span class="td td-mon" style="width:65px">2.01</span><span class="td td-mon" style="width:55px">377</span><span class="td td-mon" style="width:55px">53.3</span><span class="td td-mon" style="width:55px;font-weight:700;color:#13DDC4">7.7%</span></div>
+<div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">伍</div><span class="td" style="width:90px">伍姝娴</span><span class="td td-mon" style="width:65px">1.94</span><span class="td td-mon" style="width:55px">384</span><span class="td td-mon" style="width:55px">50.5</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FFB454">4.1%</span></div></div>
+    </div>
+  </div>
+
+  <div class="col col-center">
+    <div class="gauge-card">
+      <div class="gauge-header">
+        <div class="gauge-title">首日R</div>
+        <div class="live-badge"><span class="dot"></span>实时</div>
+      </div>
+      <div class="gauge-body">
+        <div class="gauge-side">
+          <div class="mini-card" style="border:1px solid rgba(46,167,255,0.2);background:rgba(10,24,56,0.4)">
+            <div class="mini-label">当日总消耗(元)</div>
+            <div class="mini-val" style="color:#FFFFFF">193,476</div>
+          </div>
+          <div class="mini-card" style="border:1px solid rgba(19,221,196,0.2);background:rgba(10,24,56,0.4)">
+            <div class="mini-label">当日拉新(人)</div>
+            <div class="mini-val" style="color:#13DDC4">4,499</div>
+          </div>
+        </div>
+        <div class="gauge-center">
+          <svg id="speedometer-svg" width="600" height="340" viewBox="0 0 600 340" fill="none">
+<defs>
+  <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#FF4D6D"/><stop offset="20%" stop-color="#FFB454"/>
+    <stop offset="40%" stop-color="#13DDC4"/><stop offset="60%" stop-color="#13DDC4"/>
+    <stop offset="80%" stop-color="#2EA7FF"/><stop offset="100%" stop-color="#9381FF"/>
+  </linearGradient>
+  <radialGradient id="hubGlow" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#13DDC4" stop-opacity="0.6"/>
+    <stop offset="100%" stop-color="#13DDC4" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="needleGlow"><feGaussianBlur stdDeviation="3"/></filter>
+</defs>
+<ellipse cx="300" cy="260" rx="280" ry="100" fill="url(#hubGlow)"/>
+<path d="M 80 260 A 220 220 0 0 1 520 260" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="38" stroke-linecap="round"/>
+<path d="M 80 260 A 220 220 0 0 1 520 260" fill="none" stroke="url(#arcGrad)" stroke-width="22" stroke-linecap="round" opacity="0.22"/>
+<line x1="80" y1="260" x2="520" y2="260" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="3 4"/>
+<g stroke-linecap="round">
+  <line x1="60" y1="260" x2="100" y2="260" stroke="rgba(255,255,255,0.8)" stroke-width="3"/>
+  <line x1="500" y1="260" x2="540" y2="260" stroke="rgba(255,255,255,0.8)" stroke-width="3"/>
+  <line x1="300" y1="42" x2="300" y2="76" stroke="#13DDC4" stroke-width="3.5"/>
+</g>
+<g stroke-linecap="round">
+  <line x1="122" y1="131" x2="150" y2="108" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"/>
+  <line x1="232" y1="53" x2="248" y2="80" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"/>
+  <line x1="368" y1="53" x2="352" y2="80" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"/>
+  <line x1="478" y1="131" x2="450" y2="108" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"/>
+</g>
+<g stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-linecap="round">
+  <line x1="100" y1="200" x2="115" y2="186"/><line x1="148" y1="100" x2="160" y2="112"/>
+  <line x1="206" y1="60" x2="210" y2="76"/><line x1="248" y1="46" x2="248" y2="64"/>
+  <line x1="352" y1="46" x2="352" y2="64"/><line x1="394" y1="60" x2="390" y2="76"/>
+  <line x1="452" y1="100" x2="440" y2="112"/><line x1="500" y1="200" x2="485" y2="186"/>
+</g>
+<text x="60" y="288" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="JetBrains Mono" font-size="14" font-weight="500">0</text>
+<text x="136" y="100" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="JetBrains Mono" font-size="14" font-weight="500">3</text>
+<text x="240" y="42" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="JetBrains Mono" font-size="14" font-weight="500">6</text>
+<text x="300" y="32" text-anchor="middle" fill="#13DDC4" font-family="JetBrains Mono" font-size="15" font-weight="700">9</text>
+<text x="360" y="42" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="JetBrains Mono" font-size="14" font-weight="500">12</text>
+<text x="464" y="100" text-anchor="middle" fill="#9381FF" font-family="JetBrains Mono" font-size="14" font-weight="600">15</text>
+<text x="60" y="308" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-family="Inter" font-size="11">0%</text>
+<text x="540" y="308" text-anchor="middle" fill="#9381FF" font-family="Inter" font-size="11" font-weight="600">15%</text>
+<g>
+  <line x1="300" y1="260" x2="194.0" y2="67.2" stroke="#13DDC4" stroke-width="5" stroke-linecap="round" filter="url(#needleGlow)" opacity="0.7"/>
+  <line x1="300" y1="260" x2="194.0" y2="67.2" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+</g>
+<circle cx="194.0" cy="67.2" r="10" fill="#13DDC4" opacity="0.5" filter="url(#needleGlow)"/>
+<circle cx="194.0" cy="67.2" r="5" fill="#FFFFFF"/>
+<circle cx="194.0" cy="67.2" r="2" fill="#13DDC4"/>
+<circle cx="300" cy="260" r="34" fill="#030014" stroke="rgba(255,255,255,0.5)" stroke-width="2.5"/>
+<circle cx="300" cy="260" r="24" fill="#0a1838" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+<circle cx="300" cy="260" r="14" fill="#030014" stroke="#13DDC4" stroke-width="2"/>
+<circle cx="300" cy="260" r="6" fill="#13DDC4"/>
+<circle cx="300" cy="260" r="2" fill="#FFFFFF"/>
+</svg>
+          <div class="gauge-value-row">
+            <span class="gauge-label">首日R · 实时</span>
+            <span class="gauge-num">5.10%</span>
+            <span class="gauge-change">今日 07.29 · D1R 5.10% · 累计 5.10%</span>
+          </div>
+        </div>
+        <div class="gauge-side">
+          <div class="mini-card" style="border:1px solid rgba(147,129,255,0.2);background:rgba(10,24,56,0.4)">
+            <div class="mini-label">首日付费率</div>
+            <div class="mini-val" style="color:#9381FF">10.0%</div>
+          </div>
+          <div class="mini-card" style="border:1px solid rgba(255,180,84,0.2);background:rgba(10,24,56,0.4)">
+            <div class="mini-label">首日单价(元)</div>
+            <div class="mini-val" style="color:#FFB454">¥43.0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="roi-row">
+      <div class="roi-block m">
+        <div class="roi-header">
+          <div class="roi-title">当月截止昨日 首日R</div>
+          <div class="roi-period" style="background:rgba(46,167,255,0.15);color:#2EA7FF">7.1 - 7.28</div>
+        </div>
+        <div class="roi-main">
+          <div>
+            <div class="roi-val" style="color:#fff">6.36</div>
+            <div class="roi-delta c-cyan">当月累计 ROI 40.99% · 149,379 新增</div>
+          </div>
+          <svg width="280" height="50" viewBox="0 0 280 50">
+            <defs><linearGradient id="mGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#2EA7FF" stop-opacity="0.4"/><stop offset="100%" stop-color="#2EA7FF" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,30 L20,25 L40,28 L60,20 L80,22 L100,15 L120,18 L140,12 L160,14 L180,10 L200,12 L220,8 L240,10 L260,5 L280,7" stroke="#2EA7FF" stroke-width="2" fill="none"/>
+            <path d="M0,30 L20,25 L40,28 L60,20 L80,22 L100,15 L120,18 L140,12 L160,14 L180,10 L200,12 L220,8 L240,10 L260,5 L280,7 L280,50 L0,50 Z" fill="url(#mGrad)"/>
+            <circle cx="280" cy="7" r="4" fill="#13DDC4"/>
+          </svg>
+        </div>
+        <div class="roi-foot">
+          <span>耗: ¥5,893,897</span>
+          <span>回收: ¥2,416,158</span>
+        </div>
+      </div>
+      <div class="roi-block w">
+        <div class="roi-header">
+          <div class="roi-title">当周截止昨日 首日R</div>
+          <div class="roi-period" style="background:rgba(19,221,196,0.15);color:#13DDC4">7.26 - 7.28</div>
+        </div>
+        <div class="roi-main">
+          <div>
+            <div class="roi-val" style="color:#fff">6.05</div>
+            <div class="roi-delta c-cyan">本周累计 ROI 14.67% · 16,823 新增</div>
+          </div>
+          <svg width="280" height="50" viewBox="0 0 280 50">
+            <defs><linearGradient id="wGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#13DDC4" stop-opacity="0.4"/><stop offset="100%" stop-color="#13DDC4" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,15 L40,20 L80,12 L120,25 L160,18 L200,30 L240,28 L280,35" stroke="#13DDC4" stroke-width="2" fill="none"/>
+            <path d="M0,15 L40,20 L80,12 L120,25 L160,18 L200,30 L240,28 L280,35 L280,50 L0,50 Z" fill="url(#wGrad)"/>
+            <circle cx="280" cy="35" r="4" fill="#FFB454"/>
+          </svg>
+        </div>
+        <div class="roi-foot">
+          <span>耗: ¥657,167</span>
+          <span>回收: ¥96,435</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col col-right">
+    <div class="panel" style="flex:1;border-color:rgba(147,129,255,0.25)">
+      <div class="panel-header">
+        <div class="panel-title">新用户下载 · TOP 6</div>
+        <div class="panel-badge" style="background:rgba(147,129,255,0.15);color:#9381FF">头条·近7日</div>
+      </div>
+      <div class="table-header" style="margin-bottom:4px">
+        <span class="th" style="width:24px"></span>
+        <span class="th" style="width:130px">游戏</span>
+        <span class="th" style="width:55px;text-align:right">新增</span>
+        <span class="th" style="width:55px;text-align:right">付费率</span>
+        <span class="th" style="width:50px;text-align:right">ltv1</span>
+      </div>
+      <div class="tbody">
+<div class="tr"><div class="td-chan" style="background:#FFB454;color:#fff;border:1px solid #FFB454">1</div><span class="td" style="width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">战火使命-UR既梦绮返场</span><span class="td td-mon" style="width:55px">3,179</span><span class="td td-mon" style="width:55px">22.87%</span><span class="td td-mon" style="width:50px;font-weight:700;color:#13DDC4">4.16</span></div>
+<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">2</div><span class="td" style="width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">斗破苍穹：巅峰对决-打金版</span><span class="td td-mon" style="width:55px">2,448</span><span class="td td-mon" style="width:55px">27.90%</span><span class="td td-mon" style="width:50px;font-weight:700;color:#FF4D6D">2.93</span></div>
+<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">3</div><span class="td" style="width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">次元星姬-0充送SSR英雄</span><span class="td td-mon" style="width:55px">1,896</span><span class="td td-mon" style="width:55px">22.42%</span><span class="td td-mon" style="width:50px;font-weight:700;color:#FF4D6D">3.33</span></div>
+<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">4</div><span class="td" style="width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">时空猎人3-三大传奇返场</span><span class="td td-mon" style="width:55px">1,245</span><span class="td td-mon" style="width:55px">24.18%</span><span class="td td-mon" style="width:50px;font-weight:700;color:#FF4D6D">2.77</span></div>
+<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">5</div><span class="td" style="width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">双生幻想-打金版</span><span class="td td-mon" style="width:55px">1,143</span><span class="td td-mon" style="width:55px">14.35%</span><span class="td td-mon" style="width:50px;font-weight:700;color:#FF4D6D">2.76</span></div>
+<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">6</div><span class="td" style="width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">铸兵之王</span><span class="td td-mon" style="width:55px">1,141</span><span class="td td-mon" style="width:55px">14.20%</span><span class="td td-mon" style="width:50px;font-weight:700;color:#FFB454">4.38</span></div>
+      </div>
+    </div>
+      <div id="gameList" style="display:flex;flex-direction:column;gap:3px;justify-content:center;height:90%">
+        <div style="text-align:center;color:rgba(255,255,255,0.4);font-size:13px">
+          <div style="margin-bottom:8px">🎮 游戏维度</div>
+          <div style="font-size:11px">请在 BI 切换"游戏"维度<br>获取实时游戏下载 TOP 10</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="flex:1">
+      <div class="panel-header">
+        <div class="panel-title">头条版位量级分布</div>
+        <div class="panel-badge">头条</div>
+      </div>
+      <div class="pie-body">
+        <div id="pieChart" class="pie-chart"></div>
+        <div class="pie-legend" id="pieLegend"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom">
+  <div class="trend-panel">
+    <div class="trend-header">
+      <div class="trend-title">
+        <span class="trend-title-text">ROI 日分布趋势</span>
+        <span class="trend-badge">BI 7.1-7.29 每日实采</span>
+      </div>
+      <div class="trend-controls">
+        <div class="date-btn" data-range="7">近7天</div>
+        <div class="date-btn active" data-range="29">全29天</div>
+        <div class="date-custom">📅 07.01 - 07.29</div>
+      </div>
+      <div class="metric-tabs">
+        <div class="metric-tab active" data-metric="d1r">首日R</div>
+        <div class="metric-tab" data-metric="cost">消耗</div>
+        <div class="metric-tab" data-metric="ltv">首日LTV</div>
+        <div class="metric-tab" data-metric="payr">付费率</div>
+      </div>
+    </div>
+    <div id="trend-chart"></div>
+    <div class="trend-xaxis" id="trendXAxis"></div>
+  </div>
+</div>
+
+<script>
+const TREND29 = {
+  days:    ["0701", "0702", "0703", "0704", "0705", "0706", "0707", "0708", "0709", "0710", "0711", "0712", "0713", "0714", "0715", "0716", "0717", "0718", "0719", "0720", "0721", "0722", "0723", "0724", "0725", "0726", "0727", "0728", "0729"],
+  d1r:     [5.67, 7.14, 6.01, 7.07, 5.73, 5.85, 6.45, 7.65, 5.6, 5.73, 7.94, 6.37, 9.79, 5.61, 4.97, 5.49, 6.92, 6.46, 6.97, 5.64, 5.91, 5.48, 5.97, 5.8, 6.9, 5.6, 6.08, 6.43, 5.1],
+  cost:    [17.9, 19.3, 21.7, 22.3, 20.8, 19.6, 18.2, 18.9, 22.9, 19.9, 24.2, 19.8, 22.0, 18.7, 16.9, 18.6, 19.1, 21.9, 25.0, 20.2, 21.8, 26.2, 22.7, 21.7, 23.6, 22.4, 18.8, 24.5, 19.3],
+  ltv:     [2.12, 2.86, 2.83, 3.14, 2.4, 2.45, 2.63, 2.8, 2.17, 2.17, 3.24, 2.39, 4.1, 2.09, 1.8, 2.01, 2.43, 2.55, 2.53, 1.97, 2.31, 2.3, 2.32, 2.33, 3.38, 2.43, 2.12, 2.52, 2.2],
+  payr:    [11.35, 11.58, 12.23, 11.46, 12.83, 13.08, 13.51, 11.77, 12.34, 12.12, 11.13, 12.4, 12.12, 11.5, 10.8, 10.57, 10.81, 10.7, 11.1, 9.67, 9.82, 10.35, 11.25, 10.46, 11.79, 11.14, 10.82, 10.98, 10.01]
+};
+const TREND7 = {
+  days:    ["0723", "0724", "0725", "0726", "0727", "0728", "0729"],
+  d1r:     [5.97, 5.8, 6.9, 5.6, 6.08, 6.43, 5.1],
+  cost:    [22.7, 21.7, 23.6, 22.4, 18.8, 24.5, 19.3],
+  ltv:     [2.32, 2.33, 3.38, 2.43, 2.12, 2.52, 2.2],
+  payr:    [11.25, 10.46, 11.79, 11.14, 10.82, 10.98, 10.01]
+};
+const PIE = [{"name": "番茄小说", "pct": 32.3}, {"name": "抖音", "pct": 45.4}, {"name": "搜索", "pct": 0.4}, {"name": "穿山甲网盟非开屏营销", "pct": 7.0}, {"name": "今日头条", "pct": 7.3}, {"name": "火山小视频", "pct": 0.2}, {"name": "西瓜视频", "pct": 0.4}, {"name": "通投投放版位", "pct": 7.1}];
+const PIE_COLORS = ['#2EA7FF','#13DDC4','#9381FF','#FFB454','#FF4D6D','#5DADE2','#48C9B0','#7D3C98','#F39C12','#E74C3C'];
+
+// Render pie
+function renderPie() {
+  const data = PIE.map((d, i) => ({
+    name: d.name, value: d.pct,
+    itemStyle: {color: PIE_COLORS[i % PIE_COLORS.length]}
+  }));
+  const chart = echarts.init(document.getElementById('pieChart'));
+  chart.setOption({
+    series: [{
+      type: 'pie', radius: ['45%', '70%'], center: ['50%', '50%'],
+      data, label: {show: false}, emphasis: {label: {show: true}}
+    }],
+    graphic: [{
+      type: 'text', left: 'center', top: '38%',
+      style: {text: '头条', fill: '#fff', font: 'bold 14px Inter', textAlign: 'center'}
+    }, {
+      type: 'text', left: 'center', top: '54%',
+      style: {text: '版位分布', fill: 'rgba(255,255,255,0.5)', font: '10px Inter', textAlign: 'center'}
+    }]
+  });
+  const leg = document.getElementById('pieLegend');
+  leg.innerHTML = PIE.map((d, i) => `
+    <div class="leg-item">
+      <div class="leg-dot" style="background:${PIE_COLORS[i % PIE_COLORS.length]}"></div>
+      <span class="leg-text">${d.name}</span>
+      <span class="leg-val" style="color:${PIE_COLORS[i % PIE_COLORS.length]}">${d.pct.toFixed(1)}%</span>
+    </div>
+  `).join('');
+}
+
+// Render trend
+let currentRange = '29';
+let currentMetric = 'd1r';
+
+function renderTrend(metric, range) {
+  metric = metric || currentMetric;
+  range = range || currentRange;
+  currentMetric = metric;
+  currentRange = range;
+  const dom = document.getElementById('trend-chart');
+  let chart = echarts.getInstanceByDom(dom);
+  if (!chart) chart = echarts.init(dom);
+  const trendData = (range === '7' ? TREND7 : TREND29);
+  const data = trendData[metric] || trendData.d1r;
+  const days = trendData.days;
+  // 单位：D1R=%, 消耗=万, 首日LTV=元/人, 付费率=%
+  const unit = metric === 'cost' ? '万' : metric === 'ltv' ? '元/人' : '%';
+  const name = {d1r: '首日R', cost: '消耗', ltv: '首日LTV', payr: '付费率'}[metric] || metric;
+  const color = metric === 'd1r' ? '#2EA7FF' : metric === 'cost' ? '#FFB454' : metric === 'ltv' ? '#13DDC4' : '#FF4D6D';
+  const todayIdx = days.length - 1;
+  chart.setOption({
+    grid: {left: 55, right: 60, top: 18, bottom: 8},
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(10,24,56,0.95)',
+      borderColor: '#2EA7FF',
+      borderWidth: 1,
+      textStyle: {color: '#fff', fontSize: 12},
+      axisPointer: {type: 'cross', crossStyle: {color: '#2EA7FF', opacity: 0.6}, lineStyle: {color: '#2EA7FF', type: 'dashed'}},
+      formatter: function(params) {
+        const p = params[0];
+        const dateFull = days[p.dataIndex];
+        const m = dateFull.substring(0, 2);
+        const d = dateFull.substring(2);
+        const dateStr = '2026-' + m + '-' + d;
+        const v = data[p.dataIndex];
+        const vStr = (v === null || v === undefined) ? '无数据' : v;
+        return `<div style="padding:6px 4px">`
+          + `<div style="font-weight:700;color:#2EA7FF;margin-bottom:4px">📅 ${dateStr}</div>`
+          + `<div style="display:flex;justify-content:space-between;gap:12px">`
+          + `<span>${name}：</span><span style="color:${color};font-weight:700">${vStr}${unit}</span>`
+          + `</div></div>`;
+      }
+    },
+    xAxis: {type: 'category', data: days,
+      axisLabel: {color: 'rgba(255,255,255,0.4)', fontSize: 10, fontFamily: 'JetBrains Mono,monospace'},
+      axisLine: {show: false}, axisTick: {show: false}
+    },
+    yAxis: {type: 'value', splitLine: {lineStyle: {color: 'rgba(255,255,255,0.06)', type: 'dashed'}},
+      axisLabel: {color: 'rgba(255,255,255,0.4)', fontSize: 10, fontFamily: 'JetBrains Mono,monospace'}
+    },
+    series: [{
+      type: 'line', data, smooth: true, symbol: 'circle', symbolSize: 5,
+      lineStyle: {width: 2.5, color},
+      areaStyle: {color: {type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+        colorStops: [{offset: 0, color: color + '66'}, {offset: 1, color: color + '00'}]}},
+      markPoint: {data: [{coord: [days[todayIdx], data[todayIdx]], symbol: 'circle', symbolSize: 14,
+        itemStyle: {color: '#13DDC4'},
+        label: {formatter: function(p) {
+          const v = data[todayIdx];
+          return `${days[todayIdx]} ${name}: ${v === null ? '-' : v}${unit}`;
+        }, color: '#fff', fontSize: 10, fontWeight: 'bold', position: 'top',
+          backgroundColor: '#13DDC4', padding: [4, 8], borderRadius: 4}
+      }]}
+    }]
+  });
+  const step = Math.max(1, Math.floor(days.length / 10));
+  document.getElementById('trendXAxis').innerHTML =
+    days.filter((_, i) => i % step === 0 || i === days.length - 1)
+        .map(d => `<span>${d}</span>`).join('');
+}
+
+// Clock
+function updateClock() {
+  const now = new Date();
+  const M = String(now.getMonth() + 1).padStart(2, '0');
+  const D = String(now.getDate()).padStart(2, '0');
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  document.getElementById('clockDisplay').textContent = `${M}.${D} ${h}:${m}`;
+}
+
+// Event bindings
+document.querySelectorAll('.metric-tab').forEach(el => {
+  el.addEventListener('click', function() {
+    document.querySelectorAll('.metric-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    renderTrend(this.dataset.metric, currentRange);
+  });
+});
+document.querySelectorAll('.date-btn').forEach(el => {
+  el.addEventListener('click', function() {
+    document.querySelectorAll('.date-btn').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    const range = this.dataset.range === '7' ? '7' : '29';
+    renderTrend(currentMetric, range);
+  });
+});
+
+// Init
+renderPie();
+renderTrend('d1r');
+updateClock();
+setInterval(updateClock, 30000);
+</script>
+</body>
+</html>

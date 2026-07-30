@@ -2,166 +2,66 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1920">
-<title>买量数据可视化大屏</title>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>买量数据大屏 - 登录</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{background:#030014;color:#fff;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif}
-body{height:100vh;overflow:auto;margin:0}
-/* Reset body for pages with id ending in -login/-register/-admin (auth pages) */
-#page-login,#page-register,#page-admin{position:absolute;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;flex-direction:column}
-#page-login.active,#page-register.active,#page-admin.active{display:flex}
-.page{display:none!important}
-.page.active{display:flex!important}
+html,body{height:100%;background:#030014;color:#fff;font-family:'PingFang SC','Microsoft YaHei',sans-serif}
+body{display:flex;align-items:center;justify-content:center;min-height:100vh}
 .box{width:420px;padding:40px;background:rgba(10,24,56,0.85);border:1px solid rgba(46,167,255,0.3);border-radius:12px;position:relative}
-.box::before,.box::after{content:'';position:absolute;width:14px;height:14px;border-color:rgba(46,167,255,0.8);border-style:solid}
+.box::before,.box::after{content:'';position:absolute;width:14px;height:14px;border-color:#2EA7FF;border-style:solid}
 .box::before{top:-2px;left:-2px;border-width:2px 0 0 2px}
 .box::after{bottom:-2px;right:-2px;border-width:0 2px 2px 0}
-h1{text-align:center;font-size:24px;letter-spacing:2px;text-shadow:0 0 10px rgba(46,167,255,0.6);margin-bottom:6px}
+h1{text-align:center;font-size:24px;letter-spacing:2px;color:#fff;margin-bottom:6px}
 .sub{text-align:center;color:rgba(255,255,255,0.45);font-size:13px;margin-bottom:28px}
 label{display:block;font-size:13px;color:rgba(255,255,255,0.65);margin-bottom:5px}
-input,select{width:100%;padding:11px 14px;border-radius:6px;border:1px solid rgba(46,167,255,0.25);background:rgba(10,24,56,0.6);color:#fff;font-size:14px;outline:none;margin-bottom:16px;transition:.2s}
+input{width:100%;padding:11px 14px;border-radius:6px;border:1px solid rgba(46,167,255,0.25);background:rgba(10,24,56,0.6);color:#fff;font-size:14px;outline:none;margin-bottom:16px}
 input:focus{border-color:#2EA7FF}
-.btn{width:100%;padding:12px;border:none;border-radius:6px;background:linear-gradient(135deg,#2EA7FF,#13DDC4);color:#fff;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:1px;transition:opacity .2s}
-.btn:hover{opacity:.85}
-.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn{width:100%;padding:12px;border:none;border-radius:6px;background:linear-gradient(135deg,#2EA7FF,#13DDC4);color:#fff;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:1px}
+.btn:disabled{opacity:.5}
 .links{text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.5)}
 .links a{color:#2EA7FF;text-decoration:none;cursor:pointer}
 .msg{padding:10px;border-radius:6px;font-size:13px;margin-bottom:16px;text-align:center;display:none}
 .msg.err{display:block;background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.4);color:#FF4D6D}
 .msg.ok{display:block;background:rgba(19,221,196,0.15);border:1px solid rgba(19,221,196,0.4);color:#13DDC4}
-.admin-wrap{width:820px;padding:20px;height:100%;overflow-y:auto}
-.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.admin-title{font-size:20px;letter-spacing:2px;text-shadow:0 0 8px rgba(46,167,255,0.5)}
-.admin-user{font-size:13px;color:rgba(255,255,255,0.6)}
-.admin-tb{width:100%;border-collapse:collapse}
-.admin-tb th{text-align:left;font-size:12px;color:rgba(255,255,255,0.5);padding:10px 12px;border-bottom:1px solid rgba(46,167,255,0.15);font-weight:500}
-.admin-tb td{padding:10px;font-size:13px;border-bottom:1px solid rgba(46,167,255,0.08);vertical-align:middle}
-.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px}
-.badge.pending{background:rgba(255,180,84,0.15);color:#FFB454;border:1px solid rgba(255,180,84,0.3)}
-.badge.approved{background:rgba(19,221,196,0.15);color:#13DDC4;border:1px solid rgba(19,221,196,0.3)}
-.bt{display:inline-block;padding:4px 14px;border-radius:4px;font-size:12px;cursor:pointer;border:none;transition:.2s}
-.bt-ok{background:rgba(19,221,196,0.15);border:1px solid rgba(19,221,196,0.4);color:#13DDC4}
-.bt-no{background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.4);color:#FF4D6D;margin-left:6px}
-.section-title{font-size:15px;font-weight:600;margin:20px 0 12px}
-.empty{text-align:center;padding:30px;color:rgba(255,255,255,0.25);font-size:13px}
-.tag{position:fixed;bottom:12px;font-size:11px;color:rgba(255,255,255,0.2);left:50%;transform:translateX(-50%);z-index:999}
-.loading{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,0.3);border-top:2px solid #13DDC4;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.logout{color:#FF4D6D;text-decoration:none;font-size:13px;margin-left:12px;cursor:pointer}
-.dash-frame{overflow:auto;width:100%;height:100%}
-.dash-inner{min-width:1920px;min-height:1080px;padding:12px 20px}
 </style>
 </head>
 <body>
-
-<!-- LOGIN -->
-<div id="page-login" class="page active">
 <div class="box">
 <h1>买量数据大屏</h1>
 <div class="sub">请登录以访问后台</div>
 <div id="login-msg" class="msg"></div>
 <form onsubmit="event.preventDefault();doLogin()">
-<label>用户名</label><input type="text" id="login-user" required autocomplete="username">
-<label>密码</label><input type="password" id="login-pass" required autocomplete="current-password">
+<label>用户名</label>
+<input type="text" id="login-user" required>
+<label>密码</label>
+<input type="password" id="login-pass" required>
 <button class="btn" type="submit" id="login-btn">登 录</button>
 </form>
-<div class="links">还没有账号？<a onclick="showPage('register')">申请注册</a></div>
+<div class="links">还没有账号？<a onclick="alert('请联系管理员 admin 注册')">申请注册</a></div>
 </div>
-<div class="tag">内部数据系统 · 需申请注册</div>
-</div>
-
-<!-- REGISTER -->
-<div id="page-register" class="page">
-<div class="box" style="width:440px">
-<h1>申请注册</h1>
-<div class="sub">填写信息提交后等待管理员审批</div>
-<div id="reg-msg" class="msg"></div>
-<form onsubmit="event.preventDefault();doRegister()">
-<label>真实姓名</label><input type="text" id="reg-name" required placeholder="如：张三">
-<label>用户名</label><input type="text" id="reg-user" required placeholder="用于登录的账号">
-<label>密码</label><input type="password" id="reg-pass" required minlength="6" placeholder="至少6位">
-<button class="btn" type="submit" id="reg-btn">提交申请</button>
-</form>
-<div class="links">已有账号？<a onclick="showPage('login')">去登录</a></div>
-</div></div>
-
-<!-- ADMIN -->
-<div id="page-admin" class="page">
-<div class="admin-wrap">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-<div style="font-size:20px;letter-spacing:2px">买量大屏 · 审批管理</div>
-<div style="font-size:13px;color:rgba(255,255,255,0.6)">
-管理员：<span id="admin-name" style="color:#2EA7FF"></span>
-<a class="logout" onclick="doLogout()">退出</a></div></div>
-<div class="section-title" style="color:#2EA7FF">⏳ 待审批用户</div>
-<div id="pending-list" class="empty">加载中...</div>
-<div class="section-title" style="color:#13DDC4;margin-top:30px">✅ 已通过用户</div>
-<div id="approved-list" class="empty">加载中...</div>
-</div></div>
 
 <script>
-// === Configuration ===
-var G_TOKEN = 'ghp_4QslKu7q7SRSIbiK' + 'J8wmnPiwNSwnis4CDNZJ';
-const G_REPO = 'catnine-9/mailiang-dashboard';
+var TOKEN = 'ghp_4QslKu7q7SRSIbiK' + 'J8wmnPiwNSwnis4CDNZJ';
+var REPO = 'catnine-9/mailiang-dashboard';
 var APP_USERS = {};
-
-// === GitHub API ===
-async function githubAPI(path, method, body) {
-  var controller = new AbortController();
-  var timeoutId = setTimeout(function() { controller.abort(); }, 8000);
-  try {
-    var opts = {
-      method: method || 'GET',
-      headers: {'Authorization': 'Bearer ' + G_TOKEN, 'Accept': 'application/vnd.github.v3+json'},
-      signal: controller.signal
-    };
-    if (body) {
-      opts.body = JSON.stringify(body);
-      opts.headers['Content-Type'] = 'application/json';
-    }
-    var r = await fetch('https://api.github.com/repos/' + G_REPO + path, opts);
-    clearTimeout(timeoutId);
-    if (!r.ok) throw new Error('API ' + r.status);
-    return r.json();
-  } catch(e) {
-    clearTimeout(timeoutId);
-    throw e;
-  }
-}
 
 async function loadUsers() {
   try {
-    var controller = new AbortController();
-    var timeoutId = setTimeout(function() { controller.abort(); }, 8000);
-    var data = await githubAPI('/contents/users.json');
-    clearTimeout(timeoutId);
-    if (data && data.content) {
-      try {
+    var r = await fetch('https://api.github.com/repos/' + REPO + '/contents/users.json', {
+      headers: {'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/vnd.github.v3+json'}
+    });
+    if (r.ok) {
+      var data = await r.json();
+      if (data && data.content) {
         APP_USERS = JSON.parse(atob(data.content));
         return;
-      } catch(e2) {}
+      }
     }
-  } catch(e) {
-    console.log('Load users failed:', e);
-  }
-  // Fallback: pre-computed admin hash for "admin123456"
+  } catch(e) {}
   APP_USERS = {};
 }
 
-function getSession() {
-  try { return JSON.parse(sessionStorage.getItem('msession')||'null'); } catch(e) { return null; }
-}
-function setSession(u) { sessionStorage.setItem('msession', JSON.stringify(u)); }
-function clearSession() { sessionStorage.removeItem('msession'); }
-
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-  document.getElementById('page-' + name).classList.add('active');
-}
-
-// SHA256 using browser built-in SubtleCrypto (no external dependency)
 function showMsg(el, text, type) {
   if (!text) { el.style.display = 'none'; return; }
   el.textContent = text;
@@ -170,246 +70,22 @@ function showMsg(el, text, type) {
 }
 
 async function doLogin() {
-  await loadUsers();
   var username = document.getElementById('login-user').value;
   var password = document.getElementById('login-pass').value;
   var btn = document.getElementById('login-btn');
   var msgEl = document.getElementById('login-msg');
-  
   btn.disabled = true;
-  btn.innerHTML = '<span class="loading"></span>验证中...';
-  
-  if (!APP_USERS[username]) { showMsg(msgEl, '用户名或密码错误', 'err'); btn.disabled=false; btn.innerHTML='登 录'; return; }
+  btn.textContent = '验证中...';
+  await loadUsers();
+  if (!APP_USERS[username]) { showMsg(msgEl, '用户名或密码错误'); btn.disabled=false; btn.textContent='登 录'; return; }
   var u = APP_USERS[username];
-  if (u.status !== 'approved') { showMsg(msgEl, '账号尚未通过审批', 'err'); btn.disabled=false; btn.innerHTML='登 录'; return; }
-  
-  // Plain-text password comparison (internal system, no hashing needed)
-  if (password !== u.password) { showMsg(msgEl, '用户名或密码错误', 'err'); btn.disabled=false; btn.innerHTML='登 录'; return; }
-  
-  setSession({username: username, role: u.role});
-  btn.disabled=false; btn.innerHTML='登 录';
-  
-  // Redirect to standalone dashboard page (use absolute path)
+  if (u.status !== 'approved') { showMsg(msgEl, '账号尚未通过审批'); btn.disabled=false; btn.textContent='登 录'; return; }
+  if (password !== u.password) { showMsg(msgEl, '用户名或密码错误'); btn.disabled=false; btn.textContent='登 录'; return; }
+  btn.disabled = false;
+  btn.textContent = '登 录';
   var basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
   window.location.href = basePath + 'dashboard.html?u=' + encodeURIComponent(username) + '&r=' + encodeURIComponent(u.role);
 }
-
-async function doRegister() {
-  var username = document.getElementById('reg-user').value.trim();
-  var realname = document.getElementById('reg-name').value.trim();
-  var password = document.getElementById('reg-pass').value;
-  var btn = document.getElementById('reg-btn');
-  var msgEl = document.getElementById('reg-msg');
-  
-  btn.disabled = true;
-  btn.innerHTML = '<span class="loading"></span>提交中...';
-  await loadUsers();
-  
-  if (!username || !realname || !password) { showMsg(msgEl, '请填写所有字段', 'err'); btn.disabled=false; btn.innerHTML='提交申请'; return; }
-  if (APP_USERS[username]) { showMsg(msgEl, '用户名已存在', 'err'); btn.disabled=false; btn.innerHTML='提交申请'; return; }
-  
-  // Store plain-text password in issue body
-  try {
-    await githubAPI('/issues', 'POST', {
-      title: '注册申请: ' + username,
-      body: '## 新注册申请\n\n**姓名**: ' + realname + '\n**用户名**: ' + username + '\n**密码**: ' + password + '\n**状态**: 待审批\n\n管理员请在「审批管理」页通过',
-      labels: ['registration']
-    });
-    showMsg(msgEl, '✅ 申请已提交！等待管理员审批', 'ok');
-  } catch(e) {
-    showMsg(msgEl, '提交失败，请稍后重试', 'err');
-  }
-  btn.disabled=false; btn.innerHTML='提交申请';
-}
-
-function buildUserTable(list, showActions) {
-  if (!list || list.length === 0) return '<div class="empty">暂无</div>';
-  var html = '<table class="admin-tb"><tr><th>姓名</th><th>用户名</th>';
-  if (showActions) html += '<th>操作</th>';
-  html += '</tr>';
-  for (var i = 0; i < list.length; i++) {
-    var u = list[i];
-    html += '<tr><td>' + (u.realname || '') + '</td><td>' + u.username + '</td>';
-    if (showActions) {
-      html += '<td><button class="bt bt-ok" onclick="approveUser(\'' + u.username + '\')">通过</button>';
-      html += '<button class="bt bt-no" onclick="rejectUser(\'' + u.username + '\')">拒绝</button></td>';
-    }
-    html += '</tr>';
-  }
-  return html + '</table>';
-}
-
-async function loadAdminUsers() {
-  await loadUsers();
-  
-  var pending = [];
-  var approved = [];
-  var keys = Object.keys(APP_USERS);
-  for (var i = 0; i < keys.length; i++) {
-    var u = APP_USERS[keys[i]];
-    if (u.username === 'admin') continue;
-    if (u.status === 'pending') pending.push(u);
-    else if (u.status === 'approved') approved.push(u);
-  }
-  
-  // Also fetch pending GitHub Issues
-  var issueUsers = [];
-  try {
-    var issues = await githubAPI('/issues?labels=registration&state=open&per_page=50');
-    for (var j = 0; j < issues.length; j++) {
-      var issue = issues[j];
-      var body = issue.body || '';
-      var usernameMatch = body.match(/\*\*用户名\*\*:\s*(\S+)/);
-      var nameMatch = body.match(/\*\*姓名\*\*:\s*([^\n]+)/);
-      var pwMatch = body.match(/\*\*密码Hash\*\*:\s*([a-f0-9]+)/);
-      var saltMatch = body.match(/\*\*Salt\*\*:\s*([a-f0-9]+)/);
-      if (usernameMatch) {
-        var uname = usernameMatch[1];
-        // Skip if already in users.json
-        if (APP_USERS[uname]) continue;
-        issueUsers.push({
-          username: uname,
-          realname: nameMatch ? nameMatch[1].trim() : '',
-          issueNumber: issue.number,
-          issueBody: body,
-          hasPassword: !!(pwMatch && saltMatch),
-          password: pwMatch ? pwMatch[1] : '',
-          salt: saltMatch ? saltMatch[1] : ''
-        });
-      }
-    }
-  } catch(e) {}
-  
-  // Build pending table (merge users.json pending + GitHub Issues)
-  var pendingHtml = '';
-  if (pending.length > 0) {
-    pendingHtml = buildUserTable(pending, true);
-  }
-  if (issueUsers.length > 0) {
-    pendingHtml += '<div style="margin-top:12px;font-size:11px;color:rgba(255,180,84,0.7);padding:6px 10px;background:rgba(255,180,84,0.08);border-radius:4px">⚠️ 来自 GitHub Issues 的申请（未设置密码 → 点击"通过"后会生成临时密码 123456）</div>';
-    pendingHtml += '<table class="admin-tb"><tr><th>姓名</th><th>用户名</th><th>来源</th><th>操作</th></tr>';
-    for (var k = 0; k < issueUsers.length; k++) {
-      var iu = issueUsers[k];
-      pendingHtml += '<tr><td>' + (iu.realname || '') + '</td><td>' + iu.username + '</td>';
-      pendingHtml += '<td><span class="badge pending">Issue</span></td>';
-      pendingHtml += '<td><button class="bt bt-ok" onclick="approveIssueUser(' + iu.issueNumber + ', \'' + iu.username + '\', \'' + (iu.realname||'').replace(/'/g, "\\'") + '\')">通过</button>';
-      pendingHtml += '<button class="bt bt-no" onclick="closeIssue(' + iu.issueNumber + ')">拒绝</button></td></tr>';
-    }
-    pendingHtml += '</table>';
-  }
-  if (!pendingHtml) {
-    pendingHtml = '<div class="empty">暂无待审批用户</div>';
-  }
-  
-  document.getElementById('pending-list').innerHTML = pendingHtml;
-  document.getElementById('approved-list').innerHTML = buildUserTable(approved, false);
-}
-
-async function approveIssueUser(issueNumber, username, realname, issuePassword, issueSalt) {
-  await loadUsers();
-  
-  // Add user to users.json with plain text password
-  APP_USERS[username] = {
-    username: username,
-    realname: realname,
-    password: passwordHash || '123456',
-    role: 'user',
-    status: 'approved'
-  };
-  
-  var data = JSON.stringify(APP_USERS, null, 2);
-  var encoded = btoa(unescape(encodeURIComponent(data)));
-  
-  try {
-    var info = await githubAPI('/contents/users.json');
-    await githubAPI('/contents/users.json', 'PUT', {
-      message: 'approve from issue: ' + username,
-      content: encoded,
-      sha: info.sha,
-      branch: 'main'
-    });
-  } catch(e) {
-    alert('部署失败: ' + e.message);
-    return;
-  }
-  
-  // Close the issue
-  try {
-    await githubAPI('/issues/' + issueNumber, 'PATCH', {
-      state: 'closed',
-      body: '✅ 已通过审批（管理员处理）'
-    });
-  } catch(e) {}
-  
-  loadAdminUsers();
-}
-
-async function closeIssue(issueNumber) {
-  try {
-    await githubAPI('/issues/' + issueNumber, 'PATCH', {
-      state: 'closed',
-      body: '❌ 已被管理员拒绝'
-    });
-  } catch(e) {}
-  loadAdminUsers();
-}
-
-async function approveUser(username) {
-  await loadUsers();
-  if (!APP_USERS[username]) return;
-  
-  APP_USERS[username].status = 'approved';
-  var data = JSON.stringify(APP_USERS, null, 2);
-  var encoded = btoa(unescape(encodeURIComponent(data)));
-  
-  try {
-    var info = await githubAPI('/contents/users.json');
-    await githubAPI('/contents/users.json', 'PUT', {
-      message: 'approve: ' + username,
-      content: encoded,
-      sha: info.sha,
-      branch: 'main'
-    });
-  } catch(e) {}
-  loadAdminUsers();
-}
-
-async function rejectUser(username) {
-  await loadUsers();
-  if (!APP_USERS[username]) return;
-  APP_USERS[username].status = 'rejected';
-  var data = JSON.stringify(APP_USERS, null, 2);
-  var encoded = btoa(unescape(encodeURIComponent(data)));
-  try {
-    var info = await githubAPI('/contents/users.json');
-    await githubAPI('/contents/users.json', 'PUT', {
-      message: 'reject: ' + username,
-      content: encoded,
-      sha: info.sha,
-      branch: 'main'
-    });
-  } catch(e) {}
-  loadAdminUsers();
-}
-
-function showAdmin() {
-  showPage('admin');
-  document.getElementById('admin-name').textContent = getSession().username;
-  loadAdminUsers();
-}
-
-function doLogout() { clearSession(); showPage('login'); }
-
-// Auto login: admin stays, user redirects to dashboard
-loadUsers().then(function() {
-  var s = getSession();
-  if (s && APP_USERS[s.username] && APP_USERS[s.username].status === 'approved') {
-    if (s.role === 'admin') showAdmin();
-    else {
-      var basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
-      window.location.href = basePath + 'dashboard.html';
-    }
-  }
-});
 </script>
-</body></html>
+</body>
+</html>

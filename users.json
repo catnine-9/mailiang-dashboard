@@ -1,0 +1,10 @@
+{
+  "admin": {
+    "username": "admin",
+    "realname": "管理员",
+    "password": "e7f73d84628bc76d66fb30cf5eb5167eb1519286ab571fc2c008951c8ded9548",
+    "salt": "af803d71",
+    "role": "admin",
+    "status": "approved"
+  }
+}

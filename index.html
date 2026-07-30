@@ -69,7 +69,7 @@ input:focus{border-color:#2EA7FF}
 <div id="reg-msg" class="msg"></div>
 <form onsubmit="event.preventDefault();doRegister()">
 <label>真实姓名</label><input type="text" id="reg-name" required placeholder="如：张三">
-<label>用户名</label><input type="text" id="reg-user" required placeholder="用于登录的账号">
+<label>用户名 <span style="color:#FFB454;font-size:11px">(请输入英文名或拼音)</span></label><input type="text" id="reg-user" required pattern="[a-zA-Z0-9_]+" title="请输入英文/数字/下划线" placeholder="如：zhangsan / 1850586698">
 <label>密码</label><input type="password" id="reg-pass" required minlength="6" placeholder="至少6位">
 <button class="btn" type="submit" id="reg-btn">提交申请</button>
 </form>

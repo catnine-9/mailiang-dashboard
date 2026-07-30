@@ -203,8 +203,48 @@ function updateLogout() {
 }
 setTimeout(updateLogout, 100);
 </script>
+
+<style>
+.logout-btn{position:fixed;top:20px;right:20px;z-index:9999;padding:8px 16px;background:rgba(10,24,56,0.8);border:1px solid rgba(255,77,109,0.4);border-radius:6px;color:#FF4D6D;font-size:13px;cursor:pointer;text-decoration:none}
+.logout-btn:hover{background:rgba(255,77,109,0.15)}
+</style>
+<a class="logout-btn" id="logoutBtn" onclick="doLogout()" style="display:none">退出登录</a>
+<script>
+function doLogout() {
+  sessionStorage.removeItem('msession');
+  location.href = location.pathname.replace(/[^/]*$/, '') + 'index.html';
+}
+function updateLogout() {
+  var session = null;
+  try { session = JSON.parse(sessionStorage.getItem('msession') || 'null'); } catch(e) {}
+  if (session) document.getElementById('logoutBtn').style.display = 'block';
+}
+setTimeout(updateLogout, 100);
+</script>
 </head>
 <body>
+<script>
+// Check auth session from URL or localStorage
+(function() {
+  var params = new URLSearchParams(location.search);
+  var user = params.get('u');
+  if (user) {
+    sessionStorage.setItem('msession', JSON.stringify({username: user, role: params.get('r') || 'user'}));
+    // Clean URL
+    if (history.replaceState) history.replaceState(null, '', location.pathname);
+  } else {
+    // Try localStorage
+    var session = null;
+    try { session = JSON.parse(sessionStorage.getItem('msession') || 'null'); } catch(e) {}
+    if (!session) {
+      // Not logged in - redirect to login
+      location.href = location.pathname.replace(/[^/]*$/, '') + '?need_login=1';
+      return;
+    }
+  }
+})();
+</script>
+
 <script>
 // Check auth session from URL or localStorage
 (function() {

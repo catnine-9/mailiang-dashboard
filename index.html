@@ -397,18 +397,17 @@ function showAdmin() {
   loadAdminUsers();
 }
 
-function showDashboard() {
-  document.getElementById('page-dashboard').style.display = 'flex';
-  document.getElementById('page-dashboard').classList.add('active');
-}
-
 function doLogout() { clearSession(); showPage('login'); }
 
-// Auto login on page load
+// Auto login: admin stays, user redirects to dashboard
 loadUsers().then(function() {
   var s = getSession();
   if (s && APP_USERS[s.username] && APP_USERS[s.username].status === 'approved') {
-    if (s.role === 'admin') showAdmin(); else showDashboard();
+    if (s.role === 'admin') showAdmin();
+    else {
+      var basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
+      window.location.href = basePath + 'dashboard.html';
+    }
   }
 });
 </script>

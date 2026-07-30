@@ -188,8 +188,9 @@ async function doLogin() {
   setSession({username: username, role: u.role});
   btn.disabled=false; btn.innerHTML='登 录';
   
-  // Redirect to standalone dashboard page
-  window.location.href = 'dashboard.html?u=' + encodeURIComponent(username) + '&r=' + encodeURIComponent(u.role);
+  // Redirect to standalone dashboard page (use absolute path)
+  var basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
+  window.location.href = basePath + 'dashboard.html?u=' + encodeURIComponent(username) + '&r=' + encodeURIComponent(u.role);
 }
 
 async function doRegister() {

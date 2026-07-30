@@ -1,22 +1,29 @@
 {
   "1850586698": {
     "username": "1850586698",
-    "realname": "ÃÂ¥ÃÂÃÂÃÂ¦ÃÂÃÂ©ÃÂ¦ÃÂÃÂ§",
+    "realname": "ÃÂÃÂ¥ÃÂÃÂÃÂÃÂÃÂÃÂ¦ÃÂÃÂÃÂÃÂ©ÃÂÃÂ¦ÃÂÃÂÃÂÃÂ§",
     "password": "123456",
     "role": "user",
     "status": "approved"
   },
   "admin": {
     "username": "admin",
-    "realname": "ÃÂ§ÃÂ®ÃÂ¡ÃÂ§ÃÂÃÂÃÂ¥ÃÂÃÂ",
+    "realname": "ÃÂÃÂ§ÃÂÃÂ®ÃÂÃÂ¡ÃÂÃÂ§ÃÂÃÂÃÂÃÂÃÂÃÂ¥ÃÂÃÂÃÂÃÂ",
     "password": "admin123456",
     "role": "admin",
     "status": "approved"
   },
   "xfcstc": {
     "username": "xfcstc",
-    "realname": "å¨æ°ä¼¦",
+    "realname": "Ã¥ÂÂ¨Ã¦ÂÂ°Ã¤Â¼Â¦",
     "password": "123456789",
+    "role": "user",
+    "status": "approved"
+  },
+  "æ æç¾ç·å­": {
+    "username": "æ æç¾ç·å­",
+    "realname": "æ æç¾ç·å­",
+    "password": "123456",
     "role": "user",
     "status": "approved"
   },

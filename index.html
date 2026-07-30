@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=1920">
 <title>买量数据可视化大屏</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0/build/sha256.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;background:#030014;color:#fff;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif}
@@ -159,6 +158,15 @@ function showPage(name) {
   document.getElementById('page-' + name).classList.add('active');
 }
 
+// SHA256 using browser built-in SubtleCrypto (no external dependency)
+async function sha256(str) {
+  var encoder = new TextEncoder();
+  var data = encoder.encode(str);
+  var hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  var hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+}
+
 function showMsg(el, text, type) {
   if (!text) { el.style.display = 'none'; return; }
   el.textContent = text;
@@ -180,7 +188,7 @@ async function doLogin() {
   var u = APP_USERS[username];
   if (u.status !== 'approved') { showMsg(msgEl, '账号尚未通过审批', 'err'); btn.disabled=false; btn.innerHTML='登 录'; return; }
   
-  var hash = sha256(password + u.salt);
+  var hash = await sha256(password + u.salt);
   if (hash !== u.password) { showMsg(msgEl, '用户名或密码错误', 'err'); btn.disabled=false; btn.innerHTML='登 录'; return; }
   
   setSession({username: username, role: u.role});
@@ -203,9 +211,9 @@ async function doRegister() {
   if (!username || !realname || !password) { showMsg(msgEl, '请填写所有字段', 'err'); btn.disabled=false; btn.innerHTML='提交申请'; return; }
   if (APP_USERS[username]) { showMsg(msgEl, '用户名已存在', 'err'); btn.disabled=false; btn.innerHTML='提交申请'; return; }
   
-  // Generate salt and hash password to store in issue body
+  // Generate salt and hash password using built-in SubtleCrypto
   var salt = Math.random().toString(36).substring(2, 10);
-  var passwordHash = sha256(password + salt);
+  var passwordHash = await sha256(password + salt);
 
   try {
     await githubAPI('/issues', 'POST', {
@@ -309,7 +317,7 @@ async function approveIssueUser(issueNumber, username, realname, passwordHash, s
   // Generate default password hash if not provided
   if (!passwordHash || !salt) {
     salt = Math.random().toString(36).substring(2, 10);
-    passwordHash = sha256('123456' + salt);
+    passwordHash = await sha256('123456' + salt);
     var msg = '已通过审批（用户名: ' + username + '，初始密码: 123456，请通知用户修改）';
     alert(msg);
   }
@@ -542,7 +550,7 @@ body{overflow-x:hidden;overflow-y:auto}
   <div class="header-title">买量数据可视化大屏</div>
   <div class="header-line r"></div>
   <div class="header-badge">
-    <div class="badge-item"><span class="dot"></span><span class="time" id="clockDisplay">07.30 14:19</span></div>
+    <div class="badge-item"><span class="dot"></span><span class="time" id="clockDisplay">07.30 14:25</span></div>
     <div class="badge-item" style="border-color:rgba(19,221,196,0.4)"><span style="font-family:'JetBrains Mono',monospace;color:#2EA7FF">BI 实时 · 今日 07.30</span></div>
   </div>
 </div>
@@ -562,7 +570,7 @@ body{overflow-x:hidden;overflow-y:auto}
         <span class="th" style="width:55px;text-align:right">单价</span>
         <span class="th" style="width:55px;text-align:right">首日R</span>
       </div>
-      <div class="tbody"><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">1</div><span class="td" style="width:90px">头条</span><span class="td td-mon" style="width:65px">10.79</span><span class="td td-mon" style="width:55px">2,168</span><span class="td td-mon" style="width:55px">49.8</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FFB454">4.5%</span></div><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">2</div><span class="td" style="width:90px">UP主-磁力聚星</span><span class="td td-mon" style="width:65px">1.48</span><span class="td td-mon" style="width:55px">496</span><span class="td td-mon" style="width:55px">29.8</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">1.3%</span></div><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">3</div><span class="td" style="width:90px">快手</span><span class="td td-mon" style="width:65px">0.92</span><span class="td td-mon" style="width:55px">296</span><span class="td td-mon" style="width:55px">31.2</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">2.1%</span></div><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">4</div><span class="td" style="width:90px">sem百度</span><span class="td td-mon" style="width:65px">0.55</span><span class="td td-mon" style="width:55px">145</span><span class="td td-mon" style="width:55px">37.6</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">2.4%</span></div><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">5</div><span class="td" style="width:90px">百度信息流</span><span class="td td-mon" style="width:65px">0.17</span><span class="td td-mon" style="width:55px">84</span><span class="td td-mon" style="width:55px">20.8</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">3.1%</span></div><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">6</div><span class="td" style="width:90px">广点通</span><span class="td td-mon" style="width:65px">0.11</span><span class="td td-mon" style="width:55px">11</span><span class="td td-mon" style="width:55px">103.3</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">0.0%</span></div></div>
+      <div class="tbody"><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">1</div><span class="td" style="width:90px">头条</span><span class="td td-mon" style="width:65px">10.83</span><span class="td td-mon" style="width:55px">2,175</span><span class="td td-mon" style="width:55px">49.8</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FFB454">4.5%</span></div><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">2</div><span class="td" style="width:90px">UP主-磁力聚星</span><span class="td td-mon" style="width:65px">1.48</span><span class="td td-mon" style="width:55px">501</span><span class="td td-mon" style="width:55px">29.5</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">1.3%</span></div><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">3</div><span class="td" style="width:90px">快手</span><span class="td td-mon" style="width:65px">0.93</span><span class="td td-mon" style="width:55px">298</span><span class="td td-mon" style="width:55px">31.1</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">2.1%</span></div><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">4</div><span class="td" style="width:90px">sem百度</span><span class="td td-mon" style="width:65px">0.55</span><span class="td td-mon" style="width:55px">146</span><span class="td td-mon" style="width:55px">37.4</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">2.4%</span></div><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">5</div><span class="td" style="width:90px">百度信息流</span><span class="td td-mon" style="width:65px">0.17</span><span class="td td-mon" style="width:55px">84</span><span class="td td-mon" style="width:55px">20.8</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">3.1%</span></div><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">6</div><span class="td" style="width:90px">广点通</span><span class="td td-mon" style="width:65px">0.11</span><span class="td td-mon" style="width:55px">11</span><span class="td td-mon" style="width:55px">103.3</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">0.0%</span></div></div>
     </div>
     <div class="panel" style="flex:1;border-color:rgba(19,221,196,0.25)">
       <div class="panel-header">
@@ -577,7 +585,7 @@ body{overflow-x:hidden;overflow-y:auto}
         <span class="th" style="width:55px;text-align:right">单价</span>
         <span class="th" style="width:55px;text-align:right">首日R</span>
       </div>
-      <div class="tbody"><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">翁</div><span class="td" style="width:90px">翁顺怡</span><span class="td td-mon" style="width:65px">2.11</span><span class="td td-mon" style="width:55px">492</span><span class="td td-mon" style="width:55px">42.8</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">2.4%</span></div><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">张</div><span class="td" style="width:90px">张崇晟</span><span class="td td-mon" style="width:65px">1.86</span><span class="td td-mon" style="width:55px">372</span><span class="td td-mon" style="width:55px">50.1</span><span class="td td-mon" style="width:55px;font-weight:700;color:#13DDC4">9.0%</span></div><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">何</div><span class="td" style="width:90px">何雅婷</span><span class="td td-mon" style="width:65px">1.58</span><span class="td td-mon" style="width:55px">277</span><span class="td td-mon" style="width:55px">57.2</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">1.9%</span></div><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">周</div><span class="td" style="width:90px">周晓彬</span><span class="td td-mon" style="width:65px">1.53</span><span class="td td-mon" style="width:55px">299</span><span class="td td-mon" style="width:55px">51.1</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">2.8%</span></div><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">伍</div><span class="td" style="width:90px">伍姝娴</span><span class="td td-mon" style="width:65px">1.50</span><span class="td td-mon" style="width:55px">301</span><span class="td td-mon" style="width:55px">49.9</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FFB454">4.2%</span></div><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">肖</div><span class="td" style="width:90px">肖方超[33018]</span><span class="td td-mon" style="width:65px">1.27</span><span class="td td-mon" style="width:55px">327</span><span class="td td-mon" style="width:55px">38.7</span><span class="td td-mon" style="width:55px;font-weight:700;color:#13DDC4">7.3%</span></div></div>
+      <div class="tbody"><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">翁</div><span class="td" style="width:90px">翁顺怡</span><span class="td td-mon" style="width:65px">2.13</span><span class="td td-mon" style="width:55px">497</span><span class="td td-mon" style="width:55px">42.8</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">2.4%</span></div><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">张</div><span class="td" style="width:90px">张崇晟</span><span class="td td-mon" style="width:65px">1.87</span><span class="td td-mon" style="width:55px">372</span><span class="td td-mon" style="width:55px">50.3</span><span class="td td-mon" style="width:55px;font-weight:700;color:#13DDC4">9.0%</span></div><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">何</div><span class="td" style="width:90px">何雅婷</span><span class="td td-mon" style="width:65px">1.59</span><span class="td td-mon" style="width:55px">278</span><span class="td td-mon" style="width:55px">57.1</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">1.9%</span></div><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">周</div><span class="td" style="width:90px">周晓彬</span><span class="td td-mon" style="width:65px">1.54</span><span class="td td-mon" style="width:55px">300</span><span class="td td-mon" style="width:55px">51.2</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">2.8%</span></div><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">伍</div><span class="td" style="width:90px">伍姝娴</span><span class="td td-mon" style="width:65px">1.51</span><span class="td td-mon" style="width:55px">303</span><span class="td td-mon" style="width:55px">49.8</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FFB454">4.2%</span></div><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">肖</div><span class="td" style="width:90px">肖方超[33018]</span><span class="td td-mon" style="width:65px">1.28</span><span class="td td-mon" style="width:55px">328</span><span class="td td-mon" style="width:55px">39.0</span><span class="td td-mon" style="width:55px;font-weight:700;color:#13DDC4">7.2%</span></div></div>
     </div>
   </div>
   <div class="col col-center">
@@ -590,11 +598,11 @@ body{overflow-x:hidden;overflow-y:auto}
         <div class="gauge-side">
           <div class="mini-card" style="border:1px solid rgba(46,167,255,0.2);background:rgba(10,24,56,0.4)">
             <div class="mini-label">当日总消耗(元)</div>
-            <div class="mini-val" style="color:#FFFFFF">140,646</div>
+            <div class="mini-val" style="color:#FFFFFF">141,271</div>
           </div>
           <div class="mini-card" style="border:1px solid rgba(19,221,196,0.2);background:rgba(10,24,56,0.4)">
             <div class="mini-label">当日拉新(人)</div>
-            <div class="mini-val" style="color:#13DDC4">3,223</div>
+            <div class="mini-val" style="color:#13DDC4">3,245</div>
           </div>
         </div>
         <div class="gauge-center">
@@ -655,18 +663,18 @@ body{overflow-x:hidden;overflow-y:auto}
 </svg>
           <div class="gauge-value-row">
             <span class="gauge-label">首日R · 实时</span>
-            <span class="gauge-num">3.88%</span>
-            <span class="gauge-change">今日 07.30 · D1R 3.88% · 新增 3,223</span>
+            <span class="gauge-num">3.90%</span>
+            <span class="gauge-change">今日 07.30 · D1R 3.90% · 新增 3,245</span>
           </div>
         </div>
         <div class="gauge-side">
           <div class="mini-card" style="border:1px solid rgba(147,129,255,0.2);background:rgba(10,24,56,0.4)">
             <div class="mini-label">首日付费率</div>
-            <div class="mini-val" style="color:#9381FF">9.9%</div>
+            <div class="mini-val" style="color:#9381FF">9.8%</div>
           </div>
           <div class="mini-card" style="border:1px solid rgba(255,180,84,0.2);background:rgba(10,24,56,0.4)">
             <div class="mini-label">首日单价(元)</div>
-            <div class="mini-val" style="color:#FFB454">¥43.6</div>
+            <div class="mini-val" style="color:#FFB454">¥43.5</div>
           </div>
         </div>
       </div>
@@ -779,8 +787,8 @@ body{overflow-x:hidden;overflow-y:auto}
 </div>
 
 <script>
-const TREND29 = {days:["0702", "0703", "0704", "0705", "0706", "0707", "0708", "0709", "0710", "0711", "0712", "0713", "0714", "0715", "0716", "0717", "0718", "0719", "0720", "0721", "0722", "0723", "0724", "0725", "0726", "0727", "0728", "0729", "0730"],d1r:[7.14, 6.01, 7.07, 5.73, 5.85, 6.45, 7.65, 5.6, 5.73, 7.94, 6.37, 9.79, 5.61, 4.97, 5.49, 6.92, 6.46, 6.97, 5.64, 5.91, 5.48, 5.97, 5.8, 6.98, 5.6, 6.08, 6.43, 5.63, 3.91],cost:[19.27, 21.69, 22.27, 20.82, 19.6, 18.2, 18.87, 22.91, 19.91, 24.22, 19.8, 21.95, 18.65, 16.88, 18.58, 19.1, 21.87, 24.97, 20.22, 21.78, 26.24, 22.68, 21.66, 23.55, 22.38, 18.81, 24.52, 27.41, 14.09],ltv:[2.86, 2.83, 3.14, 2.4, 2.45, 2.63, 2.79, 2.17, 2.16, 3.23, 2.38, 4.1, 2.09, 1.79, 2.0, 2.43, 2.55, 2.53, 1.96, 2.31, 2.3, 2.31, 2.33, 3.42, 2.43, 2.12, 2.52, 2.44, 1.71],payr:[11.56, 12.22, 11.47, 12.82, 13.07, 13.52, 11.75, 12.35, 12.1, 11.11, 12.39, 12.11, 11.5, 10.78, 10.55, 10.81, 10.68, 11.1, 9.66, 9.82, 10.35, 11.26, 10.45, 11.79, 11.12, 10.81, 10.98, 10.84, 9.85]};
-const TREND7 = {days:["0724", "0725", "0726", "0727", "0728", "0729", "0730"],d1r:[5.8, 6.98, 5.6, 6.08, 6.43, 5.63, 3.91],cost:[21.66, 23.55, 22.38, 18.81, 24.52, 27.41, 14.09],ltv:[2.33, 3.42, 2.43, 2.12, 2.52, 2.44, 1.71],payr:[10.45, 11.79, 11.12, 10.81, 10.98, 10.84, 9.85]};
+const TREND29 = {days:["0702", "0703", "0704", "0705", "0706", "0707", "0708", "0709", "0710", "0711", "0712", "0713", "0714", "0715", "0716", "0717", "0718", "0719", "0720", "0721", "0722", "0723", "0724", "0725", "0726", "0727", "0728", "0729", "0730"],d1r:[7.14, 6.01, 7.07, 5.73, 5.85, 6.45, 7.65, 5.6, 5.73, 7.94, 6.37, 9.79, 5.61, 4.97, 5.49, 6.92, 6.46, 6.97, 5.64, 5.91, 5.48, 5.97, 5.8, 6.98, 5.6, 6.08, 6.43, 5.63, 3.9],cost:[19.27, 21.69, 22.27, 20.82, 19.6, 18.2, 18.87, 22.91, 19.91, 24.22, 19.8, 21.95, 18.65, 16.88, 18.58, 19.1, 21.87, 24.97, 20.22, 21.78, 26.24, 22.68, 21.66, 23.55, 22.38, 18.81, 24.52, 27.41, 14.15],ltv:[2.86, 2.83, 3.14, 2.4, 2.45, 2.63, 2.79, 2.17, 2.16, 3.23, 2.38, 4.1, 2.09, 1.79, 2.0, 2.43, 2.55, 2.53, 1.96, 2.31, 2.3, 2.31, 2.33, 3.42, 2.43, 2.12, 2.52, 2.44, 1.7],payr:[11.56, 12.22, 11.47, 12.82, 13.07, 13.52, 11.75, 12.35, 12.1, 11.11, 12.39, 12.11, 11.5, 10.78, 10.55, 10.81, 10.68, 11.1, 9.66, 9.82, 10.35, 11.26, 10.45, 11.79, 11.12, 10.81, 10.98, 10.84, 9.78]};
+const TREND7 = {days:["0724", "0725", "0726", "0727", "0728", "0729", "0730"],d1r:[5.8, 6.98, 5.6, 6.08, 6.43, 5.63, 3.9],cost:[21.66, 23.55, 22.38, 18.81, 24.52, 27.41, 14.15],ltv:[2.33, 3.42, 2.43, 2.12, 2.52, 2.44, 1.7],payr:[10.45, 11.79, 11.12, 10.81, 10.98, 10.84, 9.78]};
 const PIE = [{"name": "抖音", "pct": 44.2},{"name": "番茄小说", "pct": 30.9},{"name": "穿山甲网盟非开屏营销", "pct": 11.2},{"name": "通投投放版位", "pct": 6.7},{"name": "今日头条", "pct": 6.0},{"name": "西瓜视频", "pct": 0.5},{"name": "搜索", "pct": 0.2},{"name": "火山小视频", "pct": 0.1}];
 const PIE_COLORS = ['#2EA7FF','#13DDC4','#9381FF','#FFB454','#FF4D6D','#5DADE2','#48C9B0','#7D3C98','#F39C12','#E74C3C'];
 

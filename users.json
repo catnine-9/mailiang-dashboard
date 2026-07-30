@@ -2,16 +2,14 @@
   "admin": {
     "username": "admin",
     "realname": "管理员",
-    "password": "e7f73d84628bc76d66fb30cf5eb5167eb1519286ab571fc2c008951c8ded9548",
-    "salt": "af803d71",
+    "password": "admin123456",
     "role": "admin",
     "status": "approved"
   },
   "1850586698": {
     "username": "1850586698",
     "realname": "刘恩慧",
-    "password": "8bfb29889b972357e3bed55fe655c25a8b6d35ae1cfd777c11fb33bc33881abc",
-    "salt": "3cd0a5c8",
+    "password": "123456",
     "role": "user",
     "status": "approved"
   }

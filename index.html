@@ -12,6 +12,7 @@ body{display:flex;align-items:center;justify-content:center;min-height:100vh}
 .box::before,.box::after{content:'';position:absolute;width:14px;height:14px;border-color:#2EA7FF;border-style:solid}
 .box::before{top:-2px;left:-2px;border-width:2px 0 0 2px}
 .box::after{bottom:-2px;right:-2px;border-width:0 2px 2px 0}
+.box.wide{width:460px}
 h1{text-align:center;font-size:24px;letter-spacing:2px;color:#fff;margin-bottom:6px}
 .sub{text-align:center;color:rgba(255,255,255,0.45);font-size:13px;margin-bottom:28px}
 label{display:block;font-size:13px;color:rgba(255,255,255,0.65);margin-bottom:5px}
@@ -24,68 +25,261 @@ input:focus{border-color:#2EA7FF}
 .msg{padding:10px;border-radius:6px;font-size:13px;margin-bottom:16px;text-align:center;display:none}
 .msg.err{display:block;background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.4);color:#FF4D6D}
 .msg.ok{display:block;background:rgba(19,221,196,0.15);border:1px solid rgba(19,221,196,0.4);color:#13DDC4}
+.page{display:none}
+.page.active{display:block}
+.admin-wrap{width:820px;padding:20px;max-height:100vh;overflow-y:auto}
+.admin-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.admin-title{font-size:20px;letter-spacing:2px}
+.tb{width:100%;border-collapse:collapse;margin-bottom:20px}
+.tb th{text-align:left;font-size:12px;color:rgba(255,255,255,0.5);padding:10px 12px;border-bottom:1px solid rgba(46,167,255,0.15)}
+.tb td{padding:10px 12px;font-size:13px;border-bottom:1px solid rgba(46,167,255,0.08)}
+.bt-sm{display:inline-block;padding:4px 14px;border-radius:4px;font-size:12px;cursor:pointer;border:none;margin:0 3px}
+.bt-ok{background:rgba(19,221,196,0.15);border:1px solid rgba(19,221,196,0.4);color:#13DDC4}
+.bt-no{background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.4);color:#FF4D6D}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px}
+.badge.pending{background:rgba(255,180,84,0.15);color:#FFB454;border:1px solid rgba(255,180,84,0.3)}
+.badge.ok{background:rgba(19,221,196,0.15);color:#13DDC4;border:1px solid rgba(19,221,196,0.3)}
+.sec{font-size:15px;font-weight:600;margin:20px 0 12px}
+.empty{text-align:center;padding:30px;color:rgba(255,255,255,0.25);font-size:13px}
+.logout{color:#FF4D6D;text-decoration:none;font-size:13px;margin-left:12px;cursor:pointer}
 </style>
 </head>
 <body>
+
+<!-- LOGIN -->
+<div id="page-login" class="page active">
 <div class="box">
 <h1>买量数据大屏</h1>
 <div class="sub">请登录以访问后台</div>
 <div id="login-msg" class="msg"></div>
 <form onsubmit="event.preventDefault();doLogin()">
-<label>用户名</label>
-<input type="text" id="login-user" required>
-<label>密码</label>
-<input type="password" id="login-pass" required>
+<label>用户名</label><input type="text" id="login-user" required>
+<label>密码</label><input type="password" id="login-pass" required>
 <button class="btn" type="submit" id="login-btn">登 录</button>
 </form>
-<div class="links">还没有账号？<a onclick="alert('请联系管理员 admin 注册')">申请注册</a></div>
+<div class="links">还没有账号？<a onclick="showPage('register')">申请注册</a></div>
+</div>
 </div>
 
-<script>
-var TOKEN = 'ghp_4QslKu7q7SRSIbiK' + 'J8wmnPiwNSwnis4CDNZJ';
-var REPO = 'catnine-9/mailiang-dashboard';
-var APP_USERS = {};
+<!-- REGISTER -->
+<div id="page-register" class="page">
+<div class="box wide">
+<h1>申请注册</h1>
+<div class="sub">填写后提交，等待管理员审批</div>
+<div id="reg-msg" class="msg"></div>
+<form onsubmit="event.preventDefault();doRegister()">
+<label>真实姓名</label><input type="text" id="reg-name" required placeholder="如：张三">
+<label>用户名</label><input type="text" id="reg-user" required placeholder="用于登录的账号">
+<label>密码</label><input type="password" id="reg-pass" required minlength="6" placeholder="至少6位">
+<button class="btn" type="submit" id="reg-btn">提交申请</button>
+</form>
+<div class="links">已有账号？<a onclick="showPage('login');clearMsgs()">去登录</a></div>
+</div></div>
 
-async function loadUsers() {
-  try {
-    var r = await fetch('https://api.github.com/repos/' + REPO + '/contents/users.json', {
-      headers: {'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/vnd.github.v3+json'}
-    });
-    if (r.ok) {
-      var data = await r.json();
-      if (data && data.content) {
-        APP_USERS = JSON.parse(atob(data.content));
-        return;
+<!-- ADMIN -->
+<div id="page-admin" class="page">
+<div class="admin-wrap">
+<div class="admin-h">
+<div class="admin-title">买量大屏 · 审批管理</div>
+<div style="font-size:13px;color:rgba(255,255,255,0.6)">管理员：<span id="admin-name" style="color:#2EA7FF"></span><a class="logout" onclick="doLogout()">退出</a></div></div>
+<div class="sec" style="color:#2EA7FF">⏳ 待审批</div>
+<div id="pending-list" class="empty">加载中...</div>
+<div class="sec" style="color:#13DDC4">✅ 已通过</div>
+<div id="approved-list" class="empty">加载中...</div>
+</div></div>
+
+<script>
+var T = 'ghp_4QslKu7q7SRSIbiK' + 'J8wmnPiwNSwnis4CDNZJ';
+var R = 'catnine-9/mailiang-dashboard';
+var U = {};
+
+function showPage(n) {
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('page-'+n).classList.add('active');
+  clearMsgs();
+}
+
+function clearMsgs(){
+  var els=document.querySelectorAll('.msg');
+  for(var i=0;i<els.length;i++){els[i].style.display='none';}
+}
+
+function msg(el,t,type){
+  if(!t){el.style.display='none';el.className='msg';return;}
+  el.textContent=t;
+  el.className='msg '+(type||'err');
+  el.style.display='block';
+}
+
+async function api(method, path, body){
+  var h={Authorization:'Bearer '+T,Accept:'application/vnd.github.v3+json'};
+  if(body){h['Content-Type']='application/json';}
+  var r=await fetch('https://api.github.com/repos/'+R+path,{method:method||'GET',headers:h,body:body?JSON.stringify(body):undefined});
+  if(!r.ok)throw Error('API '+r.status);
+  return r.json();
+}
+
+async function loadUsers(){
+  try{
+    var d=await api('GET','/contents/users.json');
+    if(d&&d.content)U=JSON.parse(atob(d.content));
+  }catch(e){U={};}
+}
+
+function getSess() {
+  try{return JSON.parse(sessionStorage.getItem('ms')||'null');}catch(e){return null;}
+}
+function setSess(v){sessionStorage.setItem('ms',JSON.stringify(v));}
+function clearSess(){sessionStorage.removeItem('ms');}
+
+async function doLogin(){
+  var u=document.getElementById('login-user').value;
+  var p=document.getElementById('login-pass').value;
+  var b=document.getElementById('login-btn');
+  var m=document.getElementById('login-msg');
+  b.disabled=true; b.textContent='验证中...';
+  await loadUsers();
+  if(!U[u]){msg(m,'用户名或密码错误','err');b.disabled=false;b.textContent='登 录';return;}
+  var d=U[u];
+  if(d.status!=='approved'){msg(m,'账号尚未通过审批','err');b.disabled=false;b.textContent='登 录';return;}
+  if(p!==d.password){msg(m,'用户名或密码错误','err');b.disabled=false;b.textContent='登 录';return;}
+  setSess({username:u,role:d.role});
+  b.disabled=false;b.textContent='登 录';
+  if(d.role==='admin'){showAdmin();}else{
+    var bp=window.location.pathname.replace(/\/[^/]*$/,'/');
+    window.location.href=bp+'dashboard.html?u='+encodeURIComponent(u)+'&r='+encodeURIComponent(d.role);
+  }
+}
+
+async function doRegister(){
+  var n=document.getElementById('reg-name').value.trim();
+  var u=document.getElementById('reg-user').value.trim();
+  var p=document.getElementById('reg-pass').value;
+  var b=document.getElementById('reg-btn');
+  var m=document.getElementById('reg-msg');
+  if(!n||!u||!p){msg(m,'请填写所有字段','err');return;}
+  b.disabled=true;b.textContent='提交中...';
+  await loadUsers();
+  if(U[u]){msg(m,'用户名已存在','err');b.disabled=false;b.textContent='提交申请';return;}
+  try{
+    await api('POST','/issues',{title:'注册申请: '+u,body:'## 注册申请\n\n**姓名**: '+n+'\n**用户名**: '+u+'\n**密码**: '+p+'\n**状态**: 待审批\n\n管理员通过后即可登录。',labels:['registration']});
+    msg(m,'✅ 申请已提交！等待管理员审批','ok');
+    document.getElementById('reg-name').value='';
+    document.getElementById('reg-user').value='';
+    document.getElementById('reg-pass').value='';
+  }catch(e){msg(m,'提交失败，请稍后重试','err');}
+  b.disabled=false;b.textContent='提交申请';
+}
+
+function buildTable(list,shAct){
+  if(!list||list.length===0)return '<div class="empty">暂无</div>';
+  var h='<table class="tb"><tr><th>姓名</th><th>用户名</th>';
+  if(shAct)h+='<th>操作</th>';
+  h+='</tr>';
+  for(var i=0;i<list.length;i++){
+    var o=list[i];
+    h+='<tr><td>'+(o.realname||'')+'</td><td>'+o.username+'</td>';
+    if(shAct){
+      h+='<td><button class="bt-sm bt-ok" onclick="approve(\''+o.issue+'\',\''+o.username+'\',\''+(o.realname||'').replace(/'/g,'\\\'')+'\',\''+(o.pw||'')+'\')">通过</button>';
+      h+='<button class="bt-sm bt-no" onclick="reject(\''+o.issue+'\')">拒绝</button></td>';
+    }
+    h+='</tr>';
+  }
+  return h+'</table>';
+}
+
+async function loadAdmin(){
+  await loadUsers();
+  // Users from users.json
+  var pending=[],approved=[];
+  var ks=Object.keys(U);
+  for(var i=0;i<ks.length;i++){
+    var u=U[ks[i]];
+    if(u.username==='admin')continue;
+    if(u.status==='pending')pending.push(u);
+    else if(u.status==='approved')approved.push(u);
+  }
+  // Also fetch Issues
+  var ip=0;
+  var issues=[];
+  try{
+    issues=await api('GET','/issues?labels=registration&state=open&per_page=50');
+  }catch(e){}
+  var ih='';
+  if(issues.length>0){
+    for(var j=0;j<issues.length;j++){
+      var iss=issues[j];
+      var bd=iss.body||'';
+      var um=bd.match(/\*\*用户名\*\*:\s*(\S+)/);
+      var nm=bd.match(/\*\*姓名\*\*:\s*([^\n]+)/);
+      var pm=bd.match(/\*\*密码\*\*:\s*(\S+)/);
+      if(um&&!U[um[1]]){
+        ih+='<tr><td>'+(nm?nm[1].trim():'')+'</td><td>'+um[1]+'</td><td><span class="badge">Issue</span></td>';
+        ih+='<td><button class="bt-sm bt-ok" onclick="approveFromIssue('+iss.number+',\''+um[1]+'\',\''+(nm?nm[1].trim():'').replace(/'/g,'\\\\\'')+'\',\''+(pm?pm[1]:'123456')+'\')">通过</button>';
+        ih+='<button class="bt-sm bt-no" onclick="closeIssue('+iss.number+')">拒绝</button></td></tr>';
+        ip++;
       }
     }
-  } catch(e) {}
-  APP_USERS = {};
+    if(ih){ih='<table class="tb"><tr><th>姓名</th><th>用户名</th><th>来源</th><th>操作</th></tr>'+ih+'</table>';}
+  }
+  document.getElementById('pending-list').innerHTML=pending.length?buildTable(pending,true):(ih||'<div class="empty">暂无待审批</div>');
+  document.getElementById('approved-list').innerHTML=buildTable(approved,false);
 }
 
-function showMsg(el, text, type) {
-  if (!text) { el.style.display = 'none'; return; }
-  el.textContent = text;
-  el.className = 'msg ' + (type || 'err');
-  el.style.display = 'block';
-}
-
-async function doLogin() {
-  var username = document.getElementById('login-user').value;
-  var password = document.getElementById('login-pass').value;
-  var btn = document.getElementById('login-btn');
-  var msgEl = document.getElementById('login-msg');
-  btn.disabled = true;
-  btn.textContent = '验证中...';
+async function approveFromIssue(num,uname,rname,pwd){
+  if(!confirm('确定通过 '+uname+' 的注册申请？'))return;
   await loadUsers();
-  if (!APP_USERS[username]) { showMsg(msgEl, '用户名或密码错误'); btn.disabled=false; btn.textContent='登 录'; return; }
-  var u = APP_USERS[username];
-  if (u.status !== 'approved') { showMsg(msgEl, '账号尚未通过审批'); btn.disabled=false; btn.textContent='登 录'; return; }
-  if (password !== u.password) { showMsg(msgEl, '用户名或密码错误'); btn.disabled=false; btn.textContent='登 录'; return; }
-  btn.disabled = false;
-  btn.textContent = '登 录';
-  var basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
-  window.location.href = basePath + 'dashboard.html?u=' + encodeURIComponent(username) + '&r=' + encodeURIComponent(u.role);
+  U[uname]={username:uname,realname:rname,password:pwd,role:'user',status:'approved'};
+  await saveAndClose(num,'approve: '+uname);
 }
+
+async function approve(num,uname,rname,pwd){
+  await loadUsers();
+  if(!U[uname])return;
+  U[uname].status='approved';
+  await saveAndClose(num,'approve: '+uname);
+}
+
+async function reject(num){
+  if(!confirm('确定拒绝？'))return;
+  await api('PATCH','/issues/'+num,{state:'closed',body:'❌ 已拒绝'});
+  loadAdmin();
+}
+
+async function closeIssue(num){
+  await api('PATCH','/issues/'+num,{state:'closed'});
+  loadAdmin();
+}
+
+async function saveAndClose(num,msg){
+  var b64=btoa(unescape(encodeURIComponent(JSON.stringify(U,null,2))));
+  var info=await api('GET','/contents/users.json');
+  await api('PUT','/contents/users.json',{message:msg,content:b64,sha:info.sha,branch:'main'});
+  try{
+    await api('PATCH','/issues/'+num,{state:'closed',body:'✅ 已通过审批'});
+  }catch(e){}
+  loadAdmin();
+}
+
+function showAdmin(){
+  showPage('admin');
+  document.getElementById('admin-name').textContent=getSess().username;
+  loadAdmin();
+}
+
+function doLogout(){clearSess();showPage('login');}
+
+// Auto-login
+loadUsers().then(function(){
+  var s=getSess();
+  if(s&&U[s.username]&&U[s.username].status==='approved'){
+    if(s.role==='admin')showAdmin();
+    else{
+      var bp=window.location.pathname.replace(/\/[^/]*$/,'/');
+      window.location.href=bp+'dashboard.html';
+    }
+  }
+});
 </script>
 </body>
 </html>

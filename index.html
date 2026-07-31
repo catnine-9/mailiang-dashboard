@@ -122,7 +122,7 @@ async function api(method, path, body){
 async function loadUsers(){
   try{
     var d=await api('GET','/contents/users.json');
-    if(d&&d.content)U=JSON.parse(atob(d.content));
+    if(d&&d.content)U=JSON.parse(atob(d.content.replace(/\s/g,'')));
   }catch(e){U={};}
 }
 

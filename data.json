@@ -1,89 +1,89 @@
 {
   "topic": "fx_3387youxi_event",
-  "updatedAt": "2026-08-08T11:19:50+08:00",
+  "updatedAt": "2026-08-08T13:57:49+08:00",
   "today": {
-    "totalCost": 14294.49,
-    "totalNew": 227.0,
-    "totalStart": 242.0,
-    "totalPayCount": 52.0,
-    "totalPayAmount": 1054.33,
-    "totalMfPayAmount": 1281.3,
-    "totalMfRecharge": 1281.3,
-    "totalRecharge": 1054.33,
-    "d1Roi": 0.089636,
-    "d1PayRate": 0.229075,
-    "d1Price": 62.97,
-    "d1Arpu": 16.62
+    "totalCost": 14901.96,
+    "totalNew": 290.0,
+    "totalStart": 307.0,
+    "totalPayCount": 73.0,
+    "totalPayAmount": 1641.52,
+    "totalMfPayAmount": 1977.34,
+    "totalMfRecharge": 1964.94,
+    "totalRecharge": 1629.12,
+    "d1Roi": 0.131858,
+    "d1PayRate": 0.251724,
+    "d1Price": 51.39,
+    "d1Arpu": 44.07
   },
   "week": {
     "totalCost": 27568.76,
     "totalNew": 686.0,
     "totalStart": 727.0,
     "totalPayCount": 201.0,
-    "totalPayAmount": 5223.72,
-    "totalMfPayAmount": 6712.0,
+    "totalPayAmount": 5363.01,
+    "totalMfPayAmount": 6870.26,
     "totalMfRecharge": 4374.1,
     "totalRecharge": 3732.9,
     "d1Roi": 0.158661,
     "d1PayRate": 0.293003,
     "d1Price": 40.19,
-    "d1Arpu": 75.82
+    "d1Arpu": 76.34
   },
   "month": {
     "totalCost": 27568.76,
     "totalNew": 678.0,
     "totalStart": 716.0,
     "totalPayCount": 199.0,
-    "totalPayAmount": 5223.12,
-    "totalMfPayAmount": 6711.4,
+    "totalPayAmount": 5362.41,
+    "totalMfPayAmount": 6869.66,
     "totalMfRecharge": 4373.5,
     "totalRecharge": 3732.3,
     "d1Roi": 0.15864,
     "d1PayRate": 0.29351,
     "d1Price": 40.66,
-    "d1Arpu": 75.74
+    "d1Arpu": 76.26
   },
   "last7d": {
-    "totalCost": 125588.9,
-    "totalNew": 3270.0,
-    "totalStart": 3514.0,
-    "totalPayCount": 784.0,
-    "totalPayAmount": 21276.21,
-    "totalMfPayAmount": 31264.41,
-    "totalMfRecharge": 13858.4,
-    "totalRecharge": 10731.84,
-    "d1Roi": 0.110347,
-    "d1PayRate": 0.239755,
-    "d1Price": 38.41,
-    "d1Arpu": 438.65
+    "totalCost": 126196.37,
+    "totalNew": 3333.0,
+    "totalStart": 3579.0,
+    "totalPayCount": 806.0,
+    "totalPayAmount": 22413.83,
+    "totalMfPayAmount": 32656.48,
+    "totalMfRecharge": 14542.04,
+    "totalRecharge": 11306.63,
+    "d1Roi": 0.115233,
+    "d1PayRate": 0.241824,
+    "d1Price": 37.86,
+    "d1Arpu": 469.39
   },
   "last30d": {
-    "totalCost": 698508.12,
-    "totalNew": 15351.0,
-    "totalStart": 17017.0,
-    "totalPayCount": 3644.0,
-    "totalPayAmount": 187536.41,
-    "totalMfPayAmount": 286105.32,
-    "totalMfRecharge": 66570.29,
-    "totalRecharge": 49455.45,
-    "d1Roi": 0.095304,
-    "d1PayRate": 0.237379,
-    "d1Price": 45.5,
-    "d1Arpu": 664.58
+    "totalCost": 692239.18,
+    "totalNew": 15358.0,
+    "totalStart": 17018.0,
+    "totalPayCount": 3652.0,
+    "totalPayAmount": 186936.29,
+    "totalMfPayAmount": 283397.12,
+    "totalMfRecharge": 66942.47,
+    "totalRecharge": 49899.39,
+    "d1Roi": 0.096704,
+    "d1PayRate": 0.237791,
+    "d1Price": 45.07,
+    "d1Arpu": 684.36
   },
   "top6": [
     {
       "gameName": "神将传说-8月12日上线",
-      "newUsers": 7172.0,
-      "payRate": 0.217791,
-      "ltv1": 19.22,
+      "newUsers": 7175.0,
+      "payRate": 0.21784,
+      "ltv1": 19.28,
       "cost": 317216.76
     },
     {
       "gameName": "御剑九宫",
       "newUsers": 3237.0,
       "payRate": 0.236021,
-      "ltv1": 13.39,
+      "ltv1": 13.4,
       "cost": 125239.07
     },
     {
@@ -95,17 +95,17 @@
     },
     {
       "gameName": "上古王冠：先锋版",
-      "newUsers": 1654.0,
-      "payRate": 0.318622,
-      "ltv1": 35.45,
-      "cost": 146343.42
+      "newUsers": 1601.0,
+      "payRate": 0.317926,
+      "ltv1": 34.1,
+      "cost": 139467.01
     },
     {
       "gameName": "斗罗大陆：逆转时空-打金版",
-      "newUsers": 1370.0,
-      "payRate": 0.29781,
-      "ltv1": 7.53,
-      "cost": 62439.98
+      "newUsers": 1427.0,
+      "payRate": 0.303434,
+      "ltv1": 7.81,
+      "cost": 63047.45
     },
     {
       "gameName": "时隙之旅",
@@ -178,7 +178,7 @@
       6.86,
       7.74,
       15.87,
-      8.96
+      13.27
     ],
     "cost": [
       6.8878,
@@ -210,14 +210,14 @@
       2.9655,
       2.3114,
       2.7569,
-      1.4294
+      1.4902
     ],
     "ltv": [
-      16.2,
-      47.34,
-      26.03,
+      16.21,
+      47.4,
+      26.05,
       26.27,
-      46.5,
+      46.55,
       19.61,
       19.81,
       14.01,
@@ -225,24 +225,24 @@
       18.05,
       17.79,
       20.58,
-      11.22,
-      20.11,
+      11.24,
+      20.2,
       16.06,
       49.96,
-      12.32,
+      12.35,
       12.23,
       10.65,
       15.05,
-      16.27,
+      16.35,
       10.65,
-      9.42,
+      9.48,
       18.61,
-      13.63,
-      22.23,
-      4.53,
-      5.7,
-      9.78,
-      5.64
+      14.0,
+      22.38,
+      4.78,
+      5.97,
+      10.01,
+      6.82
     ],
     "payr": [
       28.85,
@@ -271,10 +271,10 @@
       15.59,
       17.7,
       14.86,
-      24.77,
+      24.88,
       28.59,
       29.3,
-      22.91
+      26.9
     ]
   },
   "trend7": {
@@ -294,7 +294,7 @@
       6.86,
       7.74,
       15.87,
-      8.96
+      13.27
     ],
     "cost": [
       0.9838,
@@ -303,47 +303,47 @@
       2.9655,
       2.3114,
       2.7569,
-      1.4294
+      1.4902
     ],
     "ltv": [
       18.61,
-      13.63,
-      22.23,
-      4.53,
-      5.7,
-      9.78,
-      5.64
+      14.0,
+      22.38,
+      4.78,
+      5.97,
+      10.01,
+      6.82
     ],
     "payr": [
       15.59,
       17.7,
       14.86,
-      24.77,
+      24.88,
       28.59,
       29.3,
-      22.91
+      26.9
     ]
   },
   "pie": [
     {
       "name": "抖音",
-      "value": 137.0
+      "value": 178.0
     },
     {
       "name": "番茄小说",
-      "value": 58.0
+      "value": 68.0
     },
     {
       "name": "通投投放版位",
-      "value": 15.0
+      "value": 18.0
     },
     {
       "name": "今日头条",
-      "value": 11.0
+      "value": 17.0
     }
   ],
   "games_count": {
-    "today": 19,
+    "today": 21,
     "last7d": 29,
     "last30d": 36
   }

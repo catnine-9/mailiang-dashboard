@@ -1,19 +1,19 @@
 {
   "topic": "fx_3387youxi_event",
-  "updatedAt": "2026-08-09T00:03:24+08:00",
+  "updatedAt": "2026-08-09T01:05:24+08:00",
   "today": {
-    "totalCost": 0.0,
-    "totalNew": 0.0,
-    "totalStart": 0.0,
-    "totalPayCount": 0.0,
-    "totalPayAmount": 0.0,
-    "totalMfPayAmount": 0.0,
-    "totalMfRecharge": 0.0,
-    "totalRecharge": 0.0,
-    "d1Roi": 0.0,
-    "d1PayRate": 0.0,
-    "d1Price": 0.0,
-    "d1Arpu": 0.0
+    "totalCost": 3893.27,
+    "totalNew": 37.0,
+    "totalStart": 40.0,
+    "totalPayCount": 7.0,
+    "totalPayAmount": 13.3,
+    "totalMfPayAmount": 13.3,
+    "totalMfRecharge": 13.3,
+    "totalRecharge": 13.3,
+    "d1Roi": 0.003416,
+    "d1PayRate": 0.189189,
+    "d1Price": 105.22,
+    "d1Arpu": 0.37
   },
   "week": {
     "totalCost": 32341.44,
@@ -44,32 +44,32 @@
     "d1Arpu": 29.65
   },
   "last7d": {
-    "totalCost": 133797.51,
-    "totalNew": 3338.0,
-    "totalStart": 3568.0,
-    "totalPayCount": 836.0,
-    "totalPayAmount": 25770.96,
-    "totalMfPayAmount": 34179.5,
-    "totalMfRecharge": 14971.22,
-    "totalRecharge": 12097.12,
-    "d1Roi": 0.111895,
-    "d1PayRate": 0.250449,
-    "d1Price": 40.08,
-    "d1Arpu": 412.13
+    "totalCost": 137690.78,
+    "totalNew": 3375.0,
+    "totalStart": 3608.0,
+    "totalPayCount": 843.0,
+    "totalPayAmount": 25784.26,
+    "totalMfPayAmount": 34192.8,
+    "totalMfRecharge": 14984.52,
+    "totalRecharge": 12110.42,
+    "d1Roi": 0.108827,
+    "d1PayRate": 0.249778,
+    "d1Price": 40.8,
+    "d1Arpu": 412.5
   },
   "last30d": {
     "totalCost": 662370.71,
-    "totalNew": 15203.0,
-    "totalStart": 16785.0,
-    "totalPayCount": 3596.0,
-    "totalPayAmount": 187874.92,
-    "totalMfPayAmount": 285170.52,
-    "totalMfRecharge": 67363.07,
-    "totalRecharge": 50238.33,
-    "d1Roi": 0.1017,
-    "d1PayRate": 0.236532,
-    "d1Price": 43.57,
-    "d1Arpu": 783.19
+    "totalNew": 15197.0,
+    "totalStart": 16779.0,
+    "totalPayCount": 3592.0,
+    "totalPayAmount": 187476.47,
+    "totalMfPayAmount": 284544.54,
+    "totalMfRecharge": 67124.07,
+    "totalRecharge": 50012.33,
+    "d1Roi": 0.101339,
+    "d1PayRate": 0.236362,
+    "d1Price": 43.59,
+    "d1Arpu": 678.52
   },
   "top6": [
     {
@@ -109,8 +109,8 @@
     },
     {
       "gameName": "时隙之旅",
-      "newUsers": 110.0,
-      "payRate": 0.045455,
+      "newUsers": 111.0,
+      "payRate": 0.045045,
       "ltv1": 0.45,
       "cost": 0.0
     }
@@ -178,7 +178,7 @@
       7.74,
       15.87,
       13.51,
-      null
+      0.34
     ],
     "cost": [
       4.287,
@@ -210,7 +210,7 @@
       2.3114,
       2.7569,
       3.2341,
-      null
+      0.3893
     ],
     "ltv": [
       47.4,
@@ -242,7 +242,7 @@
       6.87,
       11.39,
       7.83,
-      null
+      0.36
     ],
     "payr": [
       25.57,
@@ -274,7 +274,7 @@
       28.92,
       29.74,
       24.73,
-      null
+      18.92
     ]
   },
   "trend7": {
@@ -294,7 +294,7 @@
       7.74,
       15.87,
       13.51,
-      null
+      0.34
     ],
     "cost": [
       1.1026,
@@ -303,7 +303,7 @@
       2.3114,
       2.7569,
       3.2341,
-      null
+      0.3893
     ],
     "ltv": [
       17.18,
@@ -312,7 +312,7 @@
       6.87,
       11.39,
       7.83,
-      null
+      0.36
     ],
     "payr": [
       17.7,
@@ -321,12 +321,29 @@
       28.92,
       29.74,
       24.73,
-      null
+      18.92
     ]
   },
-  "pie": [],
+  "pie": [
+    {
+      "name": "抖音",
+      "value": 17.0
+    },
+    {
+      "name": "番茄小说",
+      "value": 15.0
+    },
+    {
+      "name": "今日头条",
+      "value": 3.0
+    },
+    {
+      "name": "西瓜视频",
+      "value": 1.0
+    }
+  ],
   "games_count": {
-    "today": 0,
+    "today": 5,
     "last7d": 29,
     "last30d": 36
   }

@@ -1,89 +1,89 @@
 {
   "topic": "fx_3387youxi_event",
-  "updatedAt": "2026-08-08T19:45:33+08:00",
+  "updatedAt": "2026-08-08T21:55:19+08:00",
   "today": {
-    "totalCost": 23793.41,
-    "totalNew": 428.0,
-    "totalStart": 452.0,
-    "totalPayCount": 107.0,
-    "totalPayAmount": 2406.11,
-    "totalMfPayAmount": 3035.64,
-    "totalMfRecharge": 3035.64,
-    "totalRecharge": 2406.11,
-    "d1Roi": 0.127583,
-    "d1PayRate": 0.25,
-    "d1Price": 55.59,
-    "d1Arpu": 41.42
+    "totalCost": 29338.22,
+    "totalNew": 505.0,
+    "totalStart": 533.0,
+    "totalPayCount": 125.0,
+    "totalPayAmount": 2722.72,
+    "totalMfPayAmount": 3377.68,
+    "totalMfRecharge": 3377.68,
+    "totalRecharge": 2722.72,
+    "d1Roi": 0.115129,
+    "d1PayRate": 0.247525,
+    "d1Price": 58.1,
+    "d1Arpu": 41.25
   },
   "week": {
     "totalCost": 27568.76,
     "totalNew": 686.0,
     "totalStart": 727.0,
-    "totalPayCount": 203.0,
-    "totalPayAmount": 5895.77,
-    "totalMfPayAmount": 7487.64,
+    "totalPayCount": 204.0,
+    "totalPayAmount": 6088.32,
+    "totalMfPayAmount": 7723.74,
     "totalMfRecharge": 4374.1,
     "totalRecharge": 3732.9,
     "d1Roi": 0.158661,
-    "d1PayRate": 0.295918,
+    "d1PayRate": 0.297376,
     "d1Price": 40.19,
-    "d1Arpu": 59.97
+    "d1Arpu": 60.15
   },
   "month": {
     "totalCost": 27568.76,
     "totalNew": 678.0,
     "totalStart": 716.0,
-    "totalPayCount": 201.0,
-    "totalPayAmount": 5895.17,
-    "totalMfPayAmount": 7487.04,
+    "totalPayCount": 202.0,
+    "totalPayAmount": 6087.72,
+    "totalMfPayAmount": 7723.14,
     "totalMfRecharge": 4373.5,
     "totalRecharge": 3732.3,
     "d1Roi": 0.15864,
-    "d1PayRate": 0.29646,
+    "d1PayRate": 0.297935,
     "d1Price": 40.66,
-    "d1Arpu": 59.89
+    "d1Arpu": 60.07
   },
   "last7d": {
-    "totalCost": 135087.82,
-    "totalNew": 3471.0,
-    "totalStart": 3724.0,
-    "totalPayCount": 845.0,
-    "totalPayAmount": 24808.89,
-    "totalMfPayAmount": 35763.7,
-    "totalMfRecharge": 15612.74,
-    "totalRecharge": 12083.62,
-    "d1Roi": 0.115575,
-    "d1PayRate": 0.243446,
-    "d1Price": 38.92,
-    "d1Arpu": 489.93
+    "totalCost": 140632.63,
+    "totalNew": 3548.0,
+    "totalStart": 3805.0,
+    "totalPayCount": 864.0,
+    "totalPayAmount": 25827.99,
+    "totalMfPayAmount": 36886.0,
+    "totalMfRecharge": 15954.78,
+    "totalRecharge": 12400.23,
+    "d1Roi": 0.11345,
+    "d1PayRate": 0.243517,
+    "d1Price": 39.64,
+    "d1Arpu": 490.39
   },
   "last30d": {
-    "totalCost": 701130.63,
-    "totalNew": 15494.0,
-    "totalStart": 17159.0,
-    "totalPayCount": 3685.0,
-    "totalPayAmount": 189238.92,
-    "totalMfPayAmount": 286499.06,
-    "totalMfRecharge": 68000.77,
-    "totalRecharge": 50663.98,
-    "d1Roi": 0.096987,
-    "d1PayRate": 0.237834,
-    "d1Price": 45.25,
-    "d1Arpu": 702.9
+    "totalCost": 706675.44,
+    "totalNew": 15570.0,
+    "totalStart": 17238.0,
+    "totalPayCount": 3704.0,
+    "totalPayAmount": 189975.5,
+    "totalMfPayAmount": 287421.18,
+    "totalMfRecharge": 68342.81,
+    "totalRecharge": 50980.59,
+    "d1Roi": 0.09671,
+    "d1PayRate": 0.237893,
+    "d1Price": 45.39,
+    "d1Arpu": 703.06
   },
   "top6": [
     {
       "gameName": "神将传说-8月12日上线",
       "newUsers": 7177.0,
       "payRate": 0.217779,
-      "ltv1": 19.31,
+      "ltv1": 19.32,
       "cost": 317216.76
     },
     {
       "gameName": "御剑九宫",
       "newUsers": 3237.0,
       "payRate": 0.236021,
-      "ltv1": 13.4,
+      "ltv1": 13.43,
       "cost": 125239.07
     },
     {
@@ -94,18 +94,18 @@
       "cost": 47268.89
     },
     {
+      "gameName": "斗罗大陆：逆转时空-打金版",
+      "newUsers": 1635.0,
+      "payRate": 0.296024,
+      "ltv1": 8.47,
+      "cost": 77483.71
+    },
+    {
       "gameName": "上古王冠：先锋版",
       "newUsers": 1603.0,
       "payRate": 0.31753,
-      "ltv1": 34.61,
+      "ltv1": 34.64,
       "cost": 139467.01
-    },
-    {
-      "gameName": "斗罗大陆：逆转时空-打金版",
-      "newUsers": 1559.0,
-      "payRate": 0.298268,
-      "ltv1": 8.39,
-      "cost": 71938.9
     },
     {
       "gameName": "时隙之旅",
@@ -178,7 +178,7 @@
       6.86,
       7.74,
       15.87,
-      12.76
+      11.51
     ],
     "cost": [
       6.8878,
@@ -210,39 +210,39 @@
       2.9655,
       2.3114,
       2.7569,
-      2.3793
+      2.9338
     ],
     "ltv": [
       16.21,
       47.4,
-      26.05,
+      26.08,
       26.27,
       46.68,
       19.61,
       19.83,
-      14.01,
+      14.06,
       14.21,
-      18.05,
+      18.07,
       17.79,
-      20.62,
-      11.32,
+      20.63,
+      11.33,
       20.2,
       16.06,
       49.96,
       12.35,
-      12.23,
+      12.29,
       10.65,
-      15.09,
+      15.12,
       16.38,
-      10.65,
+      10.67,
       9.58,
       18.61,
       14.08,
       25.21,
-      5.06,
-      6.5,
-      10.91,
-      7.09
+      5.48,
+      6.79,
+      11.26,
+      6.69
     ],
     "payr": [
       28.85,
@@ -273,8 +273,8 @@
       14.86,
       25.0,
       28.92,
-      29.59,
-      25.0
+      29.74,
+      24.75
     ]
   },
   "trend7": {
@@ -294,7 +294,7 @@
       6.86,
       7.74,
       15.87,
-      12.76
+      11.51
     ],
     "cost": [
       0.9838,
@@ -303,16 +303,16 @@
       2.9655,
       2.3114,
       2.7569,
-      2.3793
+      2.9338
     ],
     "ltv": [
       18.61,
       14.08,
       25.21,
-      5.06,
-      6.5,
-      10.91,
-      7.09
+      5.48,
+      6.79,
+      11.26,
+      6.69
     ],
     "payr": [
       15.59,
@@ -320,26 +320,26 @@
       14.86,
       25.0,
       28.92,
-      29.59,
-      25.0
+      29.74,
+      24.75
     ]
   },
   "pie": [
     {
       "name": "抖音",
-      "value": 261.0
+      "value": 299.0
     },
     {
       "name": "番茄小说",
-      "value": 98.0
+      "value": 126.0
     },
     {
       "name": "通投投放版位",
-      "value": 29.0
+      "value": 35.0
     },
     {
       "name": "今日头条",
-      "value": 21.0
+      "value": 25.0
     },
     {
       "name": "西瓜视频",
@@ -347,7 +347,7 @@
     }
   ],
   "games_count": {
-    "today": 22,
+    "today": 23,
     "last7d": 29,
     "last30d": 36
   }

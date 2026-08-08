@@ -1,6 +1,6 @@
 {
   "topic": "fx_3387youxi_event",
-  "updatedAt": "2026-08-09T01:05:24+08:00",
+  "updatedAt": "2026-08-09T01:48:00+08:00",
   "today": {
     "totalCost": 3893.27,
     "totalNew": 37.0,
@@ -17,59 +17,59 @@
   },
   "week": {
     "totalCost": 32341.44,
-    "totalNew": 558.0,
-    "totalStart": 586.0,
-    "totalPayCount": 138.0,
-    "totalPayAmount": 3497.29,
-    "totalMfPayAmount": 4368.66,
-    "totalMfRecharge": 4368.66,
-    "totalRecharge": 3497.29,
-    "d1Roi": 0.135079,
-    "d1PayRate": 0.247312,
-    "d1Price": 57.96,
-    "d1Arpu": 29.65
+    "totalNew": 559.0,
+    "totalStart": 587.0,
+    "totalPayCount": 139.0,
+    "totalPayAmount": 3531.65,
+    "totalMfPayAmount": 4423.52,
+    "totalMfRecharge": 4423.52,
+    "totalRecharge": 3531.65,
+    "d1Roi": 0.136776,
+    "d1PayRate": 0.248658,
+    "d1Price": 57.86,
+    "d1Arpu": 29.71
   },
   "month": {
     "totalCost": 32341.44,
-    "totalNew": 555.0,
-    "totalStart": 581.0,
-    "totalPayCount": 138.0,
-    "totalPayAmount": 3497.29,
-    "totalMfPayAmount": 4368.66,
-    "totalMfRecharge": 4368.66,
-    "totalRecharge": 3497.29,
-    "d1Roi": 0.135079,
-    "d1PayRate": 0.248649,
-    "d1Price": 58.27,
-    "d1Arpu": 29.65
+    "totalNew": 556.0,
+    "totalStart": 582.0,
+    "totalPayCount": 139.0,
+    "totalPayAmount": 3531.65,
+    "totalMfPayAmount": 4423.52,
+    "totalMfRecharge": 4423.52,
+    "totalRecharge": 3531.65,
+    "d1Roi": 0.136776,
+    "d1PayRate": 0.25,
+    "d1Price": 58.17,
+    "d1Arpu": 29.71
   },
   "last7d": {
     "totalCost": 137690.78,
-    "totalNew": 3375.0,
-    "totalStart": 3608.0,
-    "totalPayCount": 843.0,
-    "totalPayAmount": 25784.26,
-    "totalMfPayAmount": 34192.8,
-    "totalMfRecharge": 14984.52,
-    "totalRecharge": 12110.42,
-    "d1Roi": 0.108827,
-    "d1PayRate": 0.249778,
-    "d1Price": 40.8,
-    "d1Arpu": 412.5
+    "totalNew": 3376.0,
+    "totalStart": 3609.0,
+    "totalPayCount": 844.0,
+    "totalPayAmount": 25837.5,
+    "totalMfPayAmount": 34266.54,
+    "totalMfRecharge": 15039.38,
+    "totalRecharge": 12144.78,
+    "d1Roi": 0.109226,
+    "d1PayRate": 0.25,
+    "d1Price": 40.79,
+    "d1Arpu": 412.58
   },
   "last30d": {
     "totalCost": 662370.71,
-    "totalNew": 15197.0,
-    "totalStart": 16779.0,
-    "totalPayCount": 3592.0,
-    "totalPayAmount": 187476.47,
-    "totalMfPayAmount": 284544.54,
-    "totalMfRecharge": 67124.07,
-    "totalRecharge": 50012.33,
-    "d1Roi": 0.101339,
-    "d1PayRate": 0.236362,
-    "d1Price": 43.59,
-    "d1Arpu": 678.52
+    "totalNew": 15198.0,
+    "totalStart": 16780.0,
+    "totalPayCount": 3594.0,
+    "totalPayAmount": 187533.09,
+    "totalMfPayAmount": 284632.28,
+    "totalMfRecharge": 67178.93,
+    "totalRecharge": 50046.69,
+    "d1Roi": 0.101422,
+    "d1PayRate": 0.236478,
+    "d1Price": 43.58,
+    "d1Arpu": 679.67
   },
   "top6": [
     {
@@ -95,9 +95,9 @@
     },
     {
       "gameName": "斗罗大陆：逆转时空-打金版",
-      "newUsers": 1684.0,
-      "payRate": 0.295131,
-      "ltv1": 8.89,
+      "newUsers": 1685.0,
+      "payRate": 0.295549,
+      "ltv1": 8.93,
       "cost": 80486.93
     },
     {
@@ -177,7 +177,7 @@
       6.86,
       7.74,
       15.87,
-      13.51,
+      13.68,
       0.34
     ],
     "cost": [
@@ -234,14 +234,14 @@
       15.12,
       16.38,
       10.67,
-      9.58,
+      9.63,
       18.61,
       17.18,
       25.21,
       5.56,
-      6.87,
+      6.9,
       11.39,
-      7.83,
+      7.91,
       0.36
     ],
     "payr": [
@@ -266,14 +266,14 @@
       23.6,
       23.5,
       22.37,
-      19.31,
+      19.66,
       15.59,
       17.7,
       14.86,
       25.0,
       28.92,
       29.74,
-      24.73,
+      24.87,
       18.92
     ]
   },
@@ -293,7 +293,7 @@
       6.86,
       7.74,
       15.87,
-      13.51,
+      13.68,
       0.34
     ],
     "cost": [
@@ -309,9 +309,9 @@
       17.18,
       25.21,
       5.56,
-      6.87,
+      6.9,
       11.39,
-      7.83,
+      7.91,
       0.36
     ],
     "payr": [
@@ -320,7 +320,7 @@
       25.0,
       28.92,
       29.74,
-      24.73,
+      24.87,
       18.92
     ]
   },

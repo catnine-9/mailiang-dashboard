@@ -938,14 +938,7 @@ setTimeout(updateLogout, 100);
         <span class="th" style="width:60px;text-align:right">付费率</span>
         <span class="th" style="width:60px;text-align:right">ltv1</span>
       </div>
-      <div class="tbody">
-<div class="tr"><div class="td-chan" style="background:linear-gradient(135deg,#13DDC4,#2EA7FF);border:none;color:#fff">1</div><span class="td" style="width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="战火使命-海滨派对活动上线">战火使命-海滨派对活动上线</span><span class="td td-mon" style="width:60px">1,297</span><span class="td td-mon" style="width:60px;color:#13DDC4">28.37%</span><span class="td td-mon" style="width:60px;font-weight:700;color:#FFB454">4.97</span></div>
-<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">2</div><span class="td" style="width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="新斗罗大陆-送SRP玄子">新斗罗大陆-送SRP玄子</span><span class="td td-mon" style="width:60px">793</span><span class="td td-mon" style="width:60px;color:#13DDC4">29.76%</span><span class="td td-mon" style="width:60px;font-weight:700;color:#13DDC4">13.21</span></div>
-<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">3</div><span class="td" style="width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="上古王冠-天道玄机登场">上古王冠-天道玄机登场</span><span class="td td-mon" style="width:60px">740</span><span class="td td-mon" style="width:60px;color:#13DDC4">30.27%</span><span class="td td-mon" style="width:60px;font-weight:700;color:#13DDC4">14.28</span></div>
-<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">4</div><span class="td" style="width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="斗罗大陆：逆转时空-打金版">斗罗大陆：逆转时空-打金版</span><span class="td td-mon" style="width:60px">592</span><span class="td td-mon" style="width:60px;color:#13DDC4">30.41%</span><span class="td td-mon" style="width:60px;font-weight:700;color:#FFB454">5.97</span></div>
-<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">5</div><span class="td" style="width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="时空猎人3-传奇猎鹰返场">时空猎人3-传奇猎鹰返场</span><span class="td td-mon" style="width:60px">337</span><span class="td td-mon" style="width:60px;color:#13DDC4">31.16%</span><span class="td td-mon" style="width:60px;font-weight:700;color:#FFB454">4.95</span></div>
-<div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">6</div><span class="td" style="width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="铸兵之王-狂欢时装限时上线">铸兵之王-狂欢时装限时上线</span><span class="td td-mon" style="width:60px">322</span><span class="td td-mon" style="width:60px;color:#FF4D6D">11.49%</span><span class="td td-mon" style="width:60px;font-weight:700;color:#FF4D6D">3.26</span></div>
-      </div>
+      <div class="tbody" id="top6Body"></div>
     </div>
     <div class="panel" style="flex:1">
       <div class="panel-header">
@@ -985,9 +978,9 @@ setTimeout(updateLogout, 100);
 </div>
 
 <script>
-const TREND30 = {days:["2026-08-04"],d1r:[0],cost:[0],ltv:[0],payr:[0]};
-const TREND7 = {days:["2026-08-04"],d1r:[0],cost:[0],ltv:[0],payr:[0]};
-const PIE = [];
+let TREND30 = {days:[],d1r:[],cost:[],ltv:[],payr:[]};
+let TREND7 = {days:[],d1r:[],cost:[],ltv:[],payr:[]};
+let PIE = [];
 const PIE_COLORS = ['#2EA7FF','#13DDC4','#9381FF','#FFB454','#FF4D6D','#5DADE2','#48C9B0','#7D3C98','#F39C12','#E74C3C'];
 
 // Render pie
@@ -1129,6 +1122,83 @@ renderPie();
 renderTrend('d1r');
 updateClock();
 setInterval(updateClock, 30000);
+
+// ===== 动态数据加载：fetch data.json 刷新看板 =====
+async function loadDashboardData() {
+  try {
+    const r = await fetch('./data.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    if (!d || !d.today) throw new Error('empty data');
+
+    // 1) TOP6 新用户下载表
+    const top6Body = document.getElementById('top6Body');
+    if (top6Body && d.top6) {
+      top6Body.innerHTML = d.top6.map((g, i) => {
+        const rank = i + 1;
+        const rankStyle = rank === 1
+          ? 'background:linear-gradient(135deg,#13DDC4,#2EA7FF);border:none;color:#fff'
+          : 'background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)';
+        const payRateColor = g.payRate >= 0.20 ? '#13DDC4' : '#FF4D6D';
+        const ltvColor = g.ltv1 >= 5 ? '#13DDC4' : g.ltv1 >= 3 ? '#FFB454' : '#FF4D6D';
+        const payRateStr = (g.payRate * 100).toFixed(2) + '%';
+        const ltvStr = g.ltv1.toFixed(2);
+        const newStr = Math.round(g.newUsers).toLocaleString();
+        return '<div class="tr"><div class="td-chan" style="' + rankStyle + '">' + rank + '</div>'
+          + '<span class="td" style="width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + g.gameName + '">' + g.gameName + '</span>'
+          + '<span class="td td-mon" style="width:60px">' + newStr + '</span>'
+          + '<span class="td td-mon" style="width:60px;color:' + payRateColor + '">' + payRateStr + '</span>'
+          + '<span class="td td-mon" style="width:60px;font-weight:700;color:' + ltvColor + '">' + ltvStr + '</span></div>';
+      }).join('');
+    }
+
+    // 2) 当日总消耗 / 当日拉新 / 首日付费率 / 首日单价
+    const t = d.today;
+    const setText = (sel, txt) => { const el = document.querySelector(sel); if (el) el.textContent = txt; };
+    setText('.gauge-card .mini-card:nth-of-type(1) .mini-val', Math.round(t.totalCost).toLocaleString());
+    setText('.gauge-card .mini-card:nth-of-type(2) .mini-val', Math.round(t.totalNew).toLocaleString());
+    setText('.gauge-card .mini-card:nth-of-type(3) .mini-val', (t.d1PayRate * 100).toFixed(1) + '%');
+    setText('.gauge-card .mini-card:nth-of-type(4) .mini-val', '¥' + t.d1Price.toFixed(1));
+    // 首日R 大数显示 + 子标题
+    setText('.gauge-num', (t.d1Roi * 100).toFixed(2) + '%');
+    const gaugeChange = document.querySelector('.gauge-change');
+    if (gaugeChange) {
+      const now = new Date();
+      const mm = String(now.getMonth()+1).padStart(2,'0');
+      const dd = String(now.getDate()).padStart(2,'0');
+      gaugeChange.textContent = '今日 ' + mm + '.' + dd + ' · D1R ' + (t.d1Roi * 100).toFixed(2) + '% · 新增 ' + Math.round(t.totalNew);
+    }
+
+    // 3) 当月/当周 截止昨日 ROI
+    const monthRoiVal = document.querySelector('.roi-block.m .roi-val');
+    const monthRoiDelta = document.querySelector('.roi-block.m .roi-delta');
+    if (monthRoiVal) monthRoiVal.textContent = (d.month.d1Roi * 100).toFixed(2) + '%';
+    if (monthRoiDelta) monthRoiDelta.textContent = '当月累计 ROI ' + (d.month.d1Roi * 100).toFixed(2) + '% · ' + Math.round(d.month.totalNew || 0) + ' 新增';
+    const weekRoiVal = document.querySelector('.roi-block.w .roi-val');
+    const weekRoiDelta = document.querySelector('.roi-block.w .roi-delta');
+    if (weekRoiVal) weekRoiVal.textContent = (d.week.d1Roi * 100).toFixed(2) + '%';
+    if (weekRoiDelta) weekRoiDelta.textContent = '本周累计 ROI ' + (d.week.d1Roi * 100).toFixed(2) + '% · ' + Math.round(d.week.totalNew || 0) + ' 新增';
+
+    // 4) 更新趋势 + 饼图
+    if (d.trend30 && d.trend30.days && d.trend30.days.length) {
+      TREND30 = d.trend30;
+      TREND7 = d.trend7 && d.trend7.days && d.trend7.days.length ? d.trend7 : TREND30;
+      if (d.pie) PIE = d.pie;
+      renderPie();
+      renderTrend(currentMetric, currentRange);
+    }
+
+    // 5) 更新时间戳
+    const stamp = document.getElementById('dataStamp');
+    if (stamp) stamp.textContent = d.updatedAt || '';
+    console.log('[data-loaded]', d.updatedAt);
+  } catch (e) {
+    console.warn('[data-load-fail]', e && e.message);
+  }
+}
+
+loadDashboardData();
+setInterval(loadDashboardData, 5 * 60 * 1000);  // 每5分钟轮询
 </script>
 </body>
 </html>

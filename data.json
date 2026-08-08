@@ -1,6 +1,6 @@
 {
   "topic": "fx_3387youxi_event",
-  "updatedAt": "2026-08-09T03:19:27+08:00",
+  "updatedAt": "2026-08-09T03:46:11+08:00",
   "today": {
     "totalCost": 3893.27,
     "totalNew": 37.0,
@@ -59,17 +59,17 @@
   },
   "last30d": {
     "totalCost": 662370.71,
-    "totalNew": 15198.0,
-    "totalStart": 16780.0,
-    "totalPayCount": 3594.0,
-    "totalPayAmount": 187533.09,
-    "totalMfPayAmount": 284632.28,
-    "totalMfRecharge": 67178.93,
-    "totalRecharge": 50046.69,
-    "d1Roi": 0.101422,
-    "d1PayRate": 0.236478,
-    "d1Price": 43.58,
-    "d1Arpu": 679.67
+    "totalNew": 15208.0,
+    "totalStart": 16790.0,
+    "totalPayCount": 3598.0,
+    "totalPayAmount": 187814.6,
+    "totalMfPayAmount": 285137.82,
+    "totalMfRecharge": 67297.49,
+    "totalRecharge": 50155.75,
+    "d1Roi": 0.101601,
+    "d1PayRate": 0.236586,
+    "d1Price": 43.55,
+    "d1Arpu": 725.86
   },
   "top6": [
     {
@@ -88,9 +88,9 @@
     },
     {
       "gameName": "英杰并起",
-      "newUsers": 1707.0,
-      "payRate": 0.208553,
-      "ltv1": 18.39,
+      "newUsers": 1710.0,
+      "payRate": 0.208772,
+      "ltv1": 18.36,
       "cost": 47268.89
     },
     {
@@ -345,6 +345,6 @@
   "games_count": {
     "today": 5,
     "last7d": 29,
-    "last30d": 36
+    "last30d": 37
   }
 }

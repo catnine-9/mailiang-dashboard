@@ -1,41 +1,41 @@
 {
   "topic": "fx_3387youxi_event",
-  "updatedAt": "2026-08-08T22:02:18+08:00",
+  "updatedAt": "2026-08-08T23:04:19+08:00",
   "today": {
-    "totalCost": 29338.22,
-    "totalNew": 505.0,
-    "totalStart": 533.0,
-    "totalPayCount": 125.0,
-    "totalPayAmount": 2722.72,
-    "totalMfPayAmount": 3377.68,
-    "totalMfRecharge": 3377.68,
-    "totalRecharge": 2722.72,
-    "d1Roi": 0.115129,
-    "d1PayRate": 0.247525,
-    "d1Price": 58.1,
-    "d1Arpu": 41.25
+    "totalCost": 29391.3,
+    "totalNew": 527.0,
+    "totalStart": 555.0,
+    "totalPayCount": 131.0,
+    "totalPayAmount": 3013.79,
+    "totalMfPayAmount": 3786.7,
+    "totalMfRecharge": 3786.7,
+    "totalRecharge": 3013.79,
+    "d1Roi": 0.128837,
+    "d1PayRate": 0.248577,
+    "d1Price": 55.77,
+    "d1Arpu": 31.25
   },
   "week": {
     "totalCost": 27568.76,
     "totalNew": 686.0,
     "totalStart": 727.0,
     "totalPayCount": 204.0,
-    "totalPayAmount": 6088.32,
-    "totalMfPayAmount": 7723.74,
+    "totalPayAmount": 6113.05,
+    "totalMfPayAmount": 7752.22,
     "totalMfRecharge": 4374.1,
     "totalRecharge": 3732.9,
     "d1Roi": 0.158661,
     "d1PayRate": 0.297376,
     "d1Price": 40.19,
-    "d1Arpu": 60.15
+    "d1Arpu": 60.14
   },
   "month": {
     "totalCost": 27568.76,
     "totalNew": 678.0,
     "totalStart": 716.0,
     "totalPayCount": 202.0,
-    "totalPayAmount": 6087.72,
-    "totalMfPayAmount": 7723.14,
+    "totalPayAmount": 6112.45,
+    "totalMfPayAmount": 7751.62,
     "totalMfRecharge": 4373.5,
     "totalRecharge": 3732.3,
     "d1Roi": 0.15864,
@@ -44,46 +44,46 @@
     "d1Arpu": 60.07
   },
   "last7d": {
-    "totalCost": 140632.63,
-    "totalNew": 3548.0,
-    "totalStart": 3805.0,
-    "totalPayCount": 864.0,
-    "totalPayAmount": 25827.99,
-    "totalMfPayAmount": 36886.0,
-    "totalMfRecharge": 15954.78,
-    "totalRecharge": 12400.23,
-    "d1Roi": 0.11345,
-    "d1PayRate": 0.243517,
-    "d1Price": 39.64,
-    "d1Arpu": 490.39
+    "totalCost": 140685.71,
+    "totalNew": 3570.0,
+    "totalStart": 3827.0,
+    "totalPayCount": 870.0,
+    "totalPayAmount": 27198.89,
+    "totalMfPayAmount": 38381.02,
+    "totalMfRecharge": 16363.8,
+    "totalRecharge": 12691.3,
+    "d1Roi": 0.116315,
+    "d1PayRate": 0.243697,
+    "d1Price": 39.41,
+    "d1Arpu": 488.69
   },
   "last30d": {
-    "totalCost": 706675.44,
-    "totalNew": 15570.0,
-    "totalStart": 17238.0,
-    "totalPayCount": 3704.0,
-    "totalPayAmount": 189975.5,
-    "totalMfPayAmount": 287421.18,
-    "totalMfRecharge": 68342.81,
-    "totalRecharge": 50980.59,
-    "d1Roi": 0.09671,
-    "d1PayRate": 0.237893,
-    "d1Price": 45.39,
-    "d1Arpu": 703.06
+    "totalCost": 706728.52,
+    "totalNew": 15592.0,
+    "totalStart": 17260.0,
+    "totalPayCount": 3710.0,
+    "totalPayAmount": 191330.42,
+    "totalMfPayAmount": 288906.0,
+    "totalMfRecharge": 68751.83,
+    "totalRecharge": 51271.66,
+    "d1Roi": 0.097282,
+    "d1PayRate": 0.237943,
+    "d1Price": 45.33,
+    "d1Arpu": 694.97
   },
   "top6": [
     {
       "gameName": "神将传说-8月12日上线",
-      "newUsers": 7177.0,
-      "payRate": 0.217779,
-      "ltv1": 19.32,
+      "newUsers": 7180.0,
+      "payRate": 0.217688,
+      "ltv1": 19.45,
       "cost": 317216.76
     },
     {
       "gameName": "御剑九宫",
       "newUsers": 3237.0,
       "payRate": 0.236021,
-      "ltv1": 13.43,
+      "ltv1": 13.44,
       "cost": 125239.07
     },
     {
@@ -95,10 +95,10 @@
     },
     {
       "gameName": "斗罗大陆：逆转时空-打金版",
-      "newUsers": 1635.0,
-      "payRate": 0.296024,
-      "ltv1": 8.47,
-      "cost": 77483.71
+      "newUsers": 1654.0,
+      "payRate": 0.296252,
+      "ltv1": 8.64,
+      "cost": 77536.79
     },
     {
       "gameName": "上古王冠：先锋版",
@@ -178,7 +178,7 @@
       6.86,
       7.74,
       15.87,
-      11.51
+      12.88
     ],
     "cost": [
       6.8878,
@@ -210,7 +210,7 @@
       2.9655,
       2.3114,
       2.7569,
-      2.9338
+      2.9391
     ],
     "ltv": [
       16.21,
@@ -222,7 +222,7 @@
       19.83,
       14.06,
       14.21,
-      18.07,
+      18.11,
       17.79,
       20.63,
       11.33,
@@ -237,12 +237,12 @@
       10.67,
       9.58,
       18.61,
-      14.08,
+      17.18,
       25.21,
-      5.48,
-      6.79,
-      11.26,
-      6.69
+      5.54,
+      6.81,
+      11.3,
+      7.19
     ],
     "payr": [
       28.85,
@@ -274,7 +274,7 @@
       25.0,
       28.92,
       29.74,
-      24.75
+      24.86
     ]
   },
   "trend7": {
@@ -294,7 +294,7 @@
       6.86,
       7.74,
       15.87,
-      11.51
+      12.88
     ],
     "cost": [
       0.9838,
@@ -303,16 +303,16 @@
       2.9655,
       2.3114,
       2.7569,
-      2.9338
+      2.9391
     ],
     "ltv": [
       18.61,
-      14.08,
+      17.18,
       25.21,
-      5.48,
-      6.79,
-      11.26,
-      6.69
+      5.54,
+      6.81,
+      11.3,
+      7.19
     ],
     "payr": [
       15.59,
@@ -321,17 +321,17 @@
       25.0,
       28.92,
       29.74,
-      24.75
+      24.86
     ]
   },
   "pie": [
     {
       "name": "抖音",
-      "value": 299.0
+      "value": 312.0
     },
     {
       "name": "番茄小说",
-      "value": 126.0
+      "value": 132.0
     },
     {
       "name": "通投投放版位",

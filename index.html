@@ -180,8 +180,8 @@ function buildTable(list,shAct){
     var o=list[i];
     h+='<tr><td>'+(o.realname||'')+'</td><td>'+o.username+'</td>';
     if(shAct){
-      h+='<td><button class="bt-sm bt-ok" onclick="approve(\''+o.issue+'\',\''+o.username+'\',\''+(o.realname||'').replace(/'/g,'\\\'')+'\',\''+(o.pw||'')+'\')">通过</button>';
-      h+='<button class="bt-sm bt-no" onclick="reject(\''+o.issue+'\')">拒绝</button></td>';
+      h+='<td><button class="bt-sm bt-ok" onclick="approve(\''+(o.issue||'')+'\',\''+o.username+'\',\''+(o.realname||'').replace(/'/g,'\\\'')+'\',\''+(o.pw||'')+'\')">通过</button>';
+      h+='<button class="bt-sm bt-no" onclick="reject(\''+(o.issue||'')+'\',\''+o.username+'\')">拒绝</button></td>';
     }
     h+='</tr>';
   }
@@ -240,9 +240,15 @@ async function approve(num,uname,rname,pwd){
   await saveAndClose(num,'approve: '+uname);
 }
 
-async function reject(num){
+async function reject(num,uname){
   if(!confirm('确定拒绝？'))return;
-  await api('PATCH','/issues/'+num,{state:'closed',body:'❌ 已拒绝'});
+  try{
+    if(uname){ await loadUsers(); U[uname].status='rejected'; await saveUsers('reject: '+uname); }
+    if(num){ await api('PATCH','/issues/'+num,{state:'closed',body:'❌ 已拒绝'}); }
+  }catch(e){
+    alert('❌ 操作失败: '+(e&&e.message||'网络错误')+'，请重试');
+    return;
+  }
   loadAdmin();
 }
 
@@ -251,12 +257,21 @@ async function closeIssue(num){
   loadAdmin();
 }
 
-async function saveAndClose(num,msg){
+async function saveUsers(msg){
   var b64=btoa(unescape(encodeURIComponent(JSON.stringify(U,null,2))));
   var info=await api('GET','/contents/users.json');
   await api('PUT','/contents/users.json',{message:msg,content:b64,sha:info.sha,branch:'main'});
+}
+
+async function saveAndClose(num,msg){
   try{
-    await api('PATCH','/issues/'+num,{state:'closed',body:'✅ 已通过审批'});
+    await saveUsers(msg);
+  }catch(e){
+    alert('❌ 操作失败: '+(e&&e.message||'网络错误')+'，请重试');
+    return;
+  }
+  try{
+    if(num) await api('PATCH','/issues/'+num,{state:'closed',body:'✅ 已通过审批'});
   }catch(e){}
   loadAdmin();
 }

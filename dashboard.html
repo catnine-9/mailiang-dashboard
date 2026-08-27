@@ -747,7 +747,7 @@ setTimeout(updateLogout, 100);
   <div class="header-title">买量数据可视化大屏 <span style="font-size:24px;font-weight:500;color:rgba(46,167,255,0.7);letter-spacing:2px;margin-left:8px">· 3387平台</span></div>
   <div class="header-line r"></div>
   <div class="header-badge">
-    <div class="badge-item"><span class="dot"></span><span class="time" id="clockDisplay">08.28 00:00</span></div>
+    <div class="badge-item"><span class="dot"></span><span class="time" id="clockDisplay">08.28 00:03</span></div>
     <div class="badge-item" style="border-color:rgba(19,221,196,0.4)"><span style="font-family:'JetBrains Mono',monospace;color:#2EA7FF">BI 实时 · 今日 08.28</span></div>
   </div>
 </div>
@@ -767,7 +767,7 @@ setTimeout(updateLogout, 100);
         <span class="th" style="width:55px;text-align:right">单价</span>
         <span class="th" style="width:55px;text-align:right">首日R</span>
       </div>
-      <div class="tbody"></div>
+      <div class="tbody"><div class="tr"><div class="td-chan" style="background:rgba(46,167,255,0.2);color:#2EA7FF;border:1px solid rgba(46,167,255,0.3)">1</div><span class="td" style="width:90px">头条</span><span class="td td-mon" style="width:65px">0.00</span><span class="td td-mon" style="width:55px">2</span><span class="td td-mon" style="width:55px">0.0</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">0.0%</span></div></div>
     </div>
     <div class="panel" style="flex:1;border-color:rgba(19,221,196,0.25)">
       <div class="panel-header">
@@ -782,7 +782,7 @@ setTimeout(updateLogout, 100);
         <span class="th" style="width:55px;text-align:right">单价</span>
         <span class="th" style="width:55px;text-align:right">首日R</span>
       </div>
-      <div class="tbody"></div>
+      <div class="tbody"><div class="tr"><div class="av" style="background:rgba(46,167,255,0.25);border:1px solid #2EA7FF;color:#2EA7FF">蔡</div><span class="td" style="width:90px">蔡斯麒</span><span class="td td-mon" style="width:65px">0.00</span><span class="td td-mon" style="width:55px">2</span><span class="td td-mon" style="width:55px">0.0</span><span class="td td-mon" style="width:55px;font-weight:700;color:#FF4D6D">0.0%</span></div></div>
     </div>
   </div>
   <div class="col col-center">
@@ -799,7 +799,7 @@ setTimeout(updateLogout, 100);
           </div>
           <div class="mini-card" style="border:1px solid rgba(19,221,196,0.2);background:rgba(10,24,56,0.4)">
             <div class="mini-label">当日拉新(人)</div>
-            <div class="mini-val" style="color:#13DDC4">0</div>
+            <div class="mini-val" style="color:#13DDC4">2</div>
           </div>
         </div>
         <div class="gauge-center">
@@ -861,7 +861,7 @@ setTimeout(updateLogout, 100);
           <div class="gauge-value-row">
             <span class="gauge-label">首日R · 实时</span>
             <span class="gauge-num">0.00%</span>
-            <span class="gauge-change">今日 08.28 · D1R 0.00% · 新增 0</span>
+            <span class="gauge-change">今日 08.28 · D1R 0.00% · 新增 2</span>
           </div>
         </div>
         <div class="gauge-side">
@@ -987,7 +987,7 @@ setTimeout(updateLogout, 100);
 <script>
 const TREND30 = {days:["0730", "0731", "0801", "0802", "0803", "0804", "0805", "0806", "0807", "0808", "0809", "0810", "0811", "0812", "0813", "0814", "0815", "0816", "0817", "0818", "0819", "0820", "0821", "0822", "0823", "0824", "0825", "0826", "0827", "0828"],d1r:[7.33, 5.99, 6.26, 7.47, 6.1, 7.14, 6.1, 7.05, 6.91, 8.17, 5.99, 8.35, 7.49, 6.63, 7.53, 6.96, 8.16, 8.3, 6.64, 7.98, 7.37, 5.89, 5.67, 10.71, 7.77, 5.7, 6.0, 6.54, 8.42, 0.0],cost:[24.81, 22.87, 22.8, 24.51, 18.51, 25.11, 26.61, 25.94, 25.4, 24.43, 25.26, 26.12, 23.79, 25.71, 23.29, 28.59, 27.29, 29.65, 26.94, 23.97, 20.99, 20.33, 5.87, 15.5, 13.29, 20.85, 21.76, 24.42, 24.6, 0.0],ltv:[3.11, 2.49, 2.32, 2.8, 1.96, 2.71, 2.39, 2.72, 2.63, 3.44, 2.41, 2.34, 1.83, 1.85, 1.91, 2.23, 2.07, 2.54, 2.02, 2.18, 2.06, 1.27, 0.86, 2.69, 1.92, 2.08, 1.84, 2.06, 2.79, 0.0],payr:[11.19, 9.89, 9.97, 10.31, 10.14, 9.88, 11.32, 11.04, 9.08, 9.97, 9.19, 8.38, 7.8, 8.31, 7.96, 8.57, 8.37, 8.66, 9.24, 9.02, 7.58, 7.34, 7.23, 7.08, 8.25, 9.43, 8.47, 9.09, 9.01, 0.0]};
 const TREND7 = {days:["0822", "0823", "0824", "0825", "0826", "0827", "0828"],d1r:[10.71, 7.77, 5.7, 6.0, 6.54, 8.42, 0.0],cost:[15.5, 13.29, 20.85, 21.76, 24.42, 24.6, 0.0],ltv:[2.69, 1.92, 2.08, 1.84, 2.06, 2.79, 0.0],payr:[7.08, 8.25, 9.43, 8.47, 9.09, 9.01, 0.0]};
-const PIE = [];
+const PIE = [{"name": "抖音", "pct": 100.0}];
 const PIE_COLORS = ['#2EA7FF','#13DDC4','#9381FF','#FFB454','#FF4D6D','#5DADE2','#48C9B0','#7D3C98','#F39C12','#E74C3C'];
 
 // Render pie
